@@ -21,7 +21,11 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
     $router->post('/init', 'DataController@initData');
 });
 // 使用 auth:api 中间件，需要登录的接口
-$router->group(['middleware' => ['auth:api']], function($router) {
+$router->group(['middleware' => ['json_formatter', 'auth:api']], function($router) {
     //用户信息
     $router->get('/user', 'UserController@getUser');
+    //添加账本
+    $router->post('/book', 'BookController@add');
+    //添加收入记录
+    $router->post('/income', 'IncomeController@add');
 });
