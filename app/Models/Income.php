@@ -8,6 +8,6 @@ class Income extends Model
 {
     protected $table = 'income';
     protected $fillable = [
-        'remark', 'user_id', 'book_id', 'cash', 'category_id',
+        'remark', 'user_id', 'book_id', 'cash', 'category_id', 'record_at'
     ];
 }
