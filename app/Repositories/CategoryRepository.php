@@ -8,6 +8,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use DB;
 
 class CategoryRepository
 {
@@ -15,9 +16,9 @@ class CategoryRepository
     const TYPE_OUT = 'out';
     const TYPE_LOAN = 'loan';
 
-    public function getBuilder()
+    public function get($id)
     {
-
+		return Category::find($id);
     }
 
     /**
@@ -37,7 +38,7 @@ class CategoryRepository
      * @param string $type
      * @param int $parent_id
      */
-    public function get($type = self::TYPE_IN, $parent_id = 0)
+    public function getList($type = self::TYPE_IN, $parent_id = 0)
     {
         return Category::where("type", $type)
             ->where("parent_category_id", $parent_id)
@@ -50,4 +51,30 @@ class CategoryRepository
             ->where("parent_category_id", $parent_id)
             ->count();
     }
+	
+	public function edit($id, $params)
+	{
+		return $this->get($id)->setRawAttributes($params)->save();
+	}
+	
+	public function add($params)
+	{
+		return Category::create($params);
+	}
+	public function del($id)
+	{
+		DB::beginTransaction();
+		
+		try {
+			//删除所有子类别
+			Category::where("parent_category_id", $id)->delete();
+			//删除自己
+			$this->get($id)->delete();
+			DB::commit();
+		} catch (Exception $ex) {
+			DB::rollback();
+			return false;
+		}
+		return true;
+	}
 }

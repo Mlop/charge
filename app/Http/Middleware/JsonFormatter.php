@@ -22,7 +22,7 @@ class JsonFormatter
         $response = $next($request);
 
         if($response instanceof JsonResponse) {
-            $data = $response->getOriginalContent();
+            $data = $response->getOriginalContent();//dd($data);
             if (!isset($data['code']) || !isset($data['msg'])) {
                 $ret = [
                     'code' => 0,
@@ -34,7 +34,7 @@ class JsonFormatter
                 $response->setData($ret);
             }
         } else if($response instanceof Response) {
-            $data = $response->getOriginalContent();
+            $data = $response->getOriginalContent();//dd($data);
             if (!isset($data['code'])) {
                 $ret = [
                     'code' => 0,
@@ -48,7 +48,7 @@ class JsonFormatter
                         $ret['data'] = $data;
                     }
                 }
-
+// dd($ret);
                 $response->setContent($ret);
             }
         }

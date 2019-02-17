@@ -41,7 +41,9 @@ class UserController extends Controller
         if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
             return ['code' => 404, 'msg' => 'user_not_found'];
         }
-        return $token;
+		$user = Auth::user();
+		$user->token = $token;
+        return $user;
     }
 
     public function register(Request $request)
@@ -83,7 +85,9 @@ class UserController extends Controller
         if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
             return ['code' => 404, 'msg' => 'user_not_found'];
         }
-        return $token;
+		$user = Auth::user();
+		$user->token = $token;
+        return $user;
     }
 
     public function getUser()

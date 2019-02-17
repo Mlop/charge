@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
+Source Server         : localhost_account
 Source Server Version : 50724
 Source Host           : 127.0.0.1:3306
 Source Database       : charge
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-02-13 18:21:30
+Date: 2019-02-17 23:13:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `book` (
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES ('2', '豆豆', '14', '2019-02-13 17:45:53', '2019-02-13 17:45:53');
+INSERT INTO `book` VALUES ('2', '日常账本', '14', '2019-02-17 19:38:26', '2019-02-17 19:38:26');
 INSERT INTO `book` VALUES ('4', '豆豆红包', '14', '2019-02-13 17:50:56', '2019-02-13 17:50:56');
 
 -- ----------------------------
@@ -46,13 +46,13 @@ CREATE TABLE `category` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `parent_category_id` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES ('1', '餐饮', 'out', '2019-02-13 11:52:53', '2019-02-13 11:52:53', '0');
-INSERT INTO `category` VALUES ('2', '早餐', 'out', '2019-02-13 11:52:53', '2019-02-13 11:52:53', '1');
+INSERT INTO `category` VALUES ('1', '餐饮', 'out', '2019-02-17 19:59:32', '2019-02-17 19:59:32', '0');
+INSERT INTO `category` VALUES ('2', '早餐', 'out', '2019-02-17 17:46:32', '2019-02-17 17:46:32', '1');
 INSERT INTO `category` VALUES ('3', '午餐', 'out', '2019-02-13 11:52:53', '2019-02-13 11:52:53', '1');
 INSERT INTO `category` VALUES ('4', '晚餐', 'out', '2019-02-13 11:52:53', '2019-02-13 11:52:53', '1');
 INSERT INTO `category` VALUES ('5', '饮料水果', 'out', '2019-02-13 11:52:53', '2019-02-13 11:52:53', '1');
@@ -118,6 +118,7 @@ CREATE TABLE `income` (
   `cash` decimal(10,2) DEFAULT NULL,
   `category_id` int(10) unsigned DEFAULT NULL,
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `record_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -126,8 +127,8 @@ CREATE TABLE `income` (
 -- ----------------------------
 -- Records of income
 -- ----------------------------
-INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, '2019-02-13 17:59:44', '2019-02-13 17:59:44');
-INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
+INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, null, '2019-02-13 17:59:44', '2019-02-13 17:59:44');
+INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
 
 -- ----------------------------
 -- Table structure for outgo
@@ -139,10 +140,11 @@ CREATE TABLE `outgo` (
   `cash` decimal(10,2) DEFAULT NULL,
   `book_id` int(10) unsigned DEFAULT NULL,
   `category_id` int(10) unsigned DEFAULT NULL,
+  `record_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of outgo
@@ -156,16 +158,16 @@ CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `api_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `delete_email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `delete_remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `delete_api_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user
@@ -173,3 +175,18 @@ CREATE TABLE `user` (
 INSERT INTO `user` VALUES ('1', 'vera', null, 'vera0228@sohu.com', null, '$2y$10$mMm0yhuvdI7xDVuXgFBTOeYzlIXBmA04PLvDdLK.wz.171WMcDZ9K', null, 'U9lREUtPNN6qSnjUSzk6ePLawyFtXUIfAKWioE2DwfkIvdJiORuytx5v1yuX', '2018-11-09 17:11:33', '2018-11-12 19:35:12');
 INSERT INTO `user` VALUES ('6', 'fish', '11115', 'aa@sohu.com', null, '$2y$10$Atlr.6VPisqSI4Fk1mZnZOysiPRk8mp5xWxBlF/g25/gK22b6Pkre', null, 'rqPcGfEJEZlEG0QvMj8rx4WwQvhsuoNCxgvhap5tR4CqSKjrdCAttWBRNB1x', '2018-11-12 01:50:09', '2018-11-16 06:08:50');
 INSERT INTO `user` VALUES ('14', 'qAhO8t', null, 'nancy@aa.com', null, '$2y$10$PfyB07gENJDefSu73GyyMu3jE5Qfaun0IaxkuVy81/AiMuXDYh5pG', null, null, '2019-02-13 17:13:08', '2019-02-13 17:13:08');
+INSERT INTO `user` VALUES ('16', '3UOvc1', '1234', null, null, '$2y$10$VWT8bm37GCwZr5E0VeEqfuhPCXDBCPZnYg3.SBMs1HUj3UCSsgta6', null, null, '2019-02-17 22:48:36', '2019-02-17 22:48:36');
+
+-- ----------------------------
+-- Table structure for user_category
+-- ----------------------------
+DROP TABLE IF EXISTS `user_category`;
+CREATE TABLE `user_category` (
+  `user_id` int(10) unsigned NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `is_favorite` enum('no','yes') DEFAULT 'no'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of user_category
+-- ----------------------------

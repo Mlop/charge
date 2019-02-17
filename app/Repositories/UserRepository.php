@@ -104,6 +104,11 @@ class UserRepository
     {
         return User::create($data);
     }
+	
+	public function get()
+	{
+		return User::find(14);
+	}
 
 //    public static function __callStatic($method, $arguments)
 //    {
