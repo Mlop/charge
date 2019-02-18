@@ -15,6 +15,8 @@ class CategoryRepository
     const TYPE_IN = 'in';
     const TYPE_OUT = 'out';
     const TYPE_LOAN = 'loan';
+	const FAVORITE_YES = 'yes';
+	const FAVORITE_NO = 'no';
 
     public function get($id)
     {
@@ -28,8 +30,9 @@ class CategoryRepository
      */
     public function getFavorite($type = self::TYPE_IN)
     {
-        return Category::join("category_favorite", "id", "=", "category_id")
-            ->where("type", $type)
+        return Category::join("user_category", "category.id", "=", "user_category.category_id")
+            ->where("category.type", $type)
+			->where("user_category.is_favorite", self::FAVORITE_YES)
             ->get();
     }
 
