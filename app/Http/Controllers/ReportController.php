@@ -27,6 +27,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
 		//本月总支出
+
 		//本月总收入
 		//最近4条收支记录
 		
