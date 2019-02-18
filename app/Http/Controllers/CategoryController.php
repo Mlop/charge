@@ -24,12 +24,21 @@ class CategoryController extends Controller
     {
         $type = $request->input('type', CategoryRepository::TYPE_IN);
         $parent_id = $request->input('parent_id', 0);
+		$include_sub = $request->input('include_sub', false);
         $list = $this->catRep->getList($type, $parent_id);
         foreach ($list as $i => $cat) {
             $list[$i]['total'] = $this->catRep->count($type, $cat->id);
+			if ($include_sub) {
+				$list[$i]['sub'] = $this->catRep->getList($type, $cat->id);
+			}
         }
         return $list;
     }
+	public function getFavoriteList(Request $request)
+	{
+		$type = $request->input('type', CategoryRepository::TYPE_IN);
+		return $this->catRep->getFavorite($type);
+	}
 	/**
 	添加或编辑类别
 	*/

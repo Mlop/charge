@@ -26,7 +26,7 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {//'json
     $router->get('/categories', 'CategoryController@getList');
     $router->group(['prefix'=>'category'], function ($router){
         //设置页面
-//        $router->get('/list', 'CategoryController@getList');
+        $router->get('/favorites', 'CategoryController@getFavoriteList');
 		$router->put('/{id}/edit', 'CategoryController@edit');
 		$router->delete('/{id}/del', 'CategoryController@del');
     });
