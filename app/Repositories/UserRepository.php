@@ -10,6 +10,7 @@ namespace App\Repositories;
 use App\Models\User;
 use DB;
 use App\Models\Category;
+use App\Models\CategoryFavorite;
 
 class UserRepository
 {
@@ -97,6 +98,7 @@ class UserRepository
                 ['title' => '还款', 'type' => self::CATEGORY_TYPE_LOAN, 'created_at'=>$now, 'updated_at'=>$now],
                 ['title' => '收款', 'type' => self::CATEGORY_TYPE_LOAN, 'created_at'=>$now, 'updated_at'=>$now],
             ]);
+
         });
     }
 
@@ -110,6 +112,39 @@ class UserRepository
 		return User::find(14);
 	}
 
+    public function addCommonCategory($user_id)
+    {
+        DB::transaction(function () use ($user_id) {
+            //支出通用类别
+            $ids = Category::where('type', self::CATEGORY_TYPE_OUT)
+                ->whereIn('title', ['打车', '早餐', '午餐', '晚餐'])
+                ->pluck("id");
+            $now = DB::Raw('now()');
+            $fav = [];
+            foreach ($ids as $id) {
+                $fav[] = ['category_id' => $id, 'user_id' => $user_id, 'created_at' => $now, 'updated_at' => $now];
+            }
+            CategoryFavorite::insert($fav);
+            //收入通用类别
+            $ids = Category::where('type', self::CATEGORY_TYPE_IN)
+                ->whereIn('title', ['工资薪水', '奖金', '红包', '营业收入'])
+                ->pluck("id");
+            $fav = [];
+            foreach ($ids as $id) {
+                $fav[] = ['category_id' => $id, 'user_id' => $user_id, 'created_at' => $now, 'updated_at' => $now];
+            }
+            CategoryFavorite::insert($fav);
+            //借贷通用类别
+            $ids = Category::where('type', self::CATEGORY_TYPE_LOAN)
+                ->whereIn('title', ['借入', '借出', '还款', '收款'])
+                ->pluck("id");
+            $fav = [];
+            foreach ($ids as $id) {
+                $fav[] = ['category_id' => $id, 'user_id' => $user_id, 'created_at' => $now, 'updated_at' => $now];
+            }
+            CategoryFavorite::insert($fav);
+        });
+	}
 //    public static function __callStatic($method, $arguments)
 //    {
 //        return call_user_func_array(

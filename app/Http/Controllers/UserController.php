@@ -11,6 +11,7 @@ use Tymon\JWTAuth\JWTAuth;
 use Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Events\RegisterEvent;
 
 class UserController extends Controller
 {
@@ -51,7 +52,6 @@ class UserController extends Controller
         $data = $request->all();
         extract($data);
         //验证
-
         if (!preg_match('/^\d+$/', $account) && strpos($account, '@') == false) {
             return ['code'=>1, 'msg'=>'账号格式不正确'];
         }
@@ -82,6 +82,8 @@ class UserController extends Controller
         if (!$user) {
             return ['code'=>1, '注册失败'];
         }
+        //为新用户添加通用分类
+        event(new RegisterEvent($this->userRep, $user));
         if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
             return ['code' => 404, 'msg' => 'user_not_found'];
         }
