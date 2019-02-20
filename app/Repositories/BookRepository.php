@@ -20,4 +20,9 @@ class BookRepository
     {
         return Book::create($data);
     }
+	
+	public function getList($user_id)
+	{
+		return Book::where("user_id", $user_id)->get();
+	}
 }

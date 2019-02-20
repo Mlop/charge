@@ -14,12 +14,12 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-
+//不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {//'json_formatter'
     //用户登录、注册、获取基本信息
     $router->post('/login', 'UserController@login');
     $router->post('/register', 'UserController@register');
-    $router->get('/user', 'UserController@getUser');
+    // $router->get('/user', 'UserController@getUser');
     //初始化数据
     $router->post('/init', 'DataController@initData');
 //    //分类
@@ -35,9 +35,12 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {//'json
 // 使用 auth:api 中间件，需要登录的接口
 $router->group(['middleware' => ['json_formatter', 'auth:api']], function($router) {
     //用户信息
-    // $router->get('/user', 'UserController@getUser');
+    $router->get('/user', 'UserController@getUser');
     //添加账本
     $router->post('/book', 'BookController@add');
+	//账本列表
+	$router->get('/books', 'BookController@getList');
+	
     //添加收入记录
     $router->post('/income', 'IncomeController@add');
 
@@ -51,9 +54,14 @@ $router->group(['middleware' => ['json_formatter', 'auth:api']], function($route
     });
     //支出
     $router->group(['prefix'=>'outgo'], function ($router){
-        //设置页面
+        //添加
         $router->post('/', 'OutgoController@add');
+		//修改
         $router->put('/{id}', 'OutgoController@edit');
+		//删除
         $router->delete('/{id}', 'OutgoController@delete');
     });
+	
+	//添加借贷记录
+	$router->post('/loan', 'LoanController@add');
 });

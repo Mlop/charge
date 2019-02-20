@@ -30,7 +30,10 @@ class EventSubscriber
         if (!$user) {
             Log::error("Register event failed! need login first.");
         }
+		//添加通用类别
         $event->userRep->addCommonCategory($user->id);
+		//添加通用账本
+		$event->userRep->addCommonBook($user->id);
     }
 
     public function subscribe($events)
