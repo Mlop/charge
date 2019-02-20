@@ -10,14 +10,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\CategoryRepository;
+use Auth;
 
 class CategoryController extends Controller
 {
     protected $catRep;
+    protected $user;
 
     public function __construct(CategoryRepository $catRep)
     {
         $this->catRep = $catRep;
+        $this->user = Auth::user();
     }
 
     public function getList(Request $request)
@@ -37,7 +40,7 @@ class CategoryController extends Controller
 	public function getFavoriteList(Request $request)
 	{
 		$type = $request->input('type', CategoryRepository::TYPE_IN);
-		return $this->catRep->getFavorite($type);
+		return $this->catRep->getFavorite($this->user->id, $type);
 	}
 	/**
 	添加或编辑类别
@@ -54,6 +57,7 @@ class CategoryController extends Controller
 				"title" => $title,
 				"parent_category_id" => $parent_id,
 				"type" => $type,
+//                "user_id" => , @todo
 			];
 			return $this->catRep->add($params);
 		} else {//编辑
@@ -69,5 +73,17 @@ class CategoryController extends Controller
 	{
 		$isOk = $this->catRep->del($id);
 		return $isOk ? ['code'=>0, 'msg'=>'删除成功'] : ['code'=>1, 'msg'=>'删除失败'];
+	}
+
+    public function addFavorite($id)
+    {
+
+
+//        $params = [
+//            'category_id' => $id,
+//            'is_favorite' => ,
+//            'user_id' => $this->
+//        ];
+//        $isOk = $this->catRep->addFavorite($params);
 	}
 }

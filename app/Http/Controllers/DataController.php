@@ -28,5 +28,4 @@ class DataController extends Controller
         $res = $this->userRep->initCategory();
         return intval($res);
     }
-
 }

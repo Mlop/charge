@@ -15,9 +15,26 @@ class IncomeRepository
     {
         return Income::where($data)->exists();
     }
-
+    public function get($id)
+    {
+        return Income::find($id);
+    }
     public function create($data)
     {
         return Income::create($data);
+    }
+
+    public function delete($id)
+    {
+        return $this->get($id)->delete();
+    }
+
+    public function edit($id, $params)
+    {
+        $item = $this->get($id);
+        if (!$item) {
+            return false;
+        }
+        return $item->setRawAttributes($params)->save();
     }
 }

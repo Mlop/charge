@@ -34,13 +34,13 @@ class OutgoController extends Controller
     public function delete($id)
     {
         $isOk = $this->outRep->delete($id);
-        return $isOk ? ['code'=>0] : ['code'=>1];
+        return $isOk ? ['code' => 0] : ['code' => 1];
     }
 
     public function edit(Request $request, $id)
     {
         $parmas = $request->all();
         $isOk = $this->outRep->edit($id, $parmas);
-        return $isOk ? ['code'=>0] : ['code'=>1, 'msg'=>'改支出项不存在'];
+        return $isOk ? ['code' => 0] : ['code' => 1, 'msg' => '该支出项不存在'];
     }
 }

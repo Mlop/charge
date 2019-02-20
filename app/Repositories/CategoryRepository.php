@@ -28,11 +28,11 @@ class CategoryRepository
      * @param string $type 类型
      * @return array
      */
-    public function getFavorite($type = self::TYPE_IN)
+    public function getFavorite($user_id, $type = self::TYPE_IN)
     {
-        return Category::join("user_category", "category.id", "=", "user_category.category_id")
+        return Category::join("category_favorite", "category.id", "=", "category_favorite.category_id")
             ->where("category.type", $type)
-			->where("user_category.is_favorite", self::FAVORITE_YES)
+            ->where("category_favorite.user_id", $user_id)
             ->get();
     }
 

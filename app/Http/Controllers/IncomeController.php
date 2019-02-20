@@ -30,4 +30,17 @@ class IncomeController extends Controller
         $data['user_id'] = $this->userId;
         return $this->incomeRep->create($data);
     }
+
+    public function edit(Request $request, $id)
+    {
+        $parmas = $request->all();
+        $isOk = $this->incomeRep->edit($id, $parmas);
+        return $isOk ? ['code'=>0] : ['code'=>1, 'msg'=>'该收入项不存在'];
+    }
+
+    public function delete($id)
+    {
+        $isOk = $this->incomeRep->delete($id);
+        return $isOk ? ['code'=>0] : ['code'=>1];
+    }
 }
