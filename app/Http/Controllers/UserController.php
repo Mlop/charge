@@ -44,6 +44,7 @@ class UserController extends Controller
         }
 		$user = Auth::user();
 		$user->token = $token;
+		$this->userRep->addCommonCategory($user->id);
         return $user;
     }
 

@@ -11,6 +11,7 @@ use App\Models\User;
 use DB;
 use App\Models\Category;
 use App\Models\CategoryFavorite;
+use App\Models\Book;
 
 class UserRepository
 {
@@ -112,6 +113,9 @@ class UserRepository
 		return User::find(14);
 	}
 
+	/**
+	 * 新用户注册后添加通用类别
+	 */
     public function addCommonCategory($user_id)
     {
         DB::transaction(function () use ($user_id) {
@@ -144,6 +148,13 @@ class UserRepository
             }
             CategoryFavorite::insert($fav);
         });
+	}
+	/**
+	 * 新用户注册后添加通用账本
+	 */
+	public function addCommonBook($user_id)
+	{
+		Book::create(["title"=>"日常账本", "user_id"=>$user_id]);
 	}
 //    public static function __callStatic($method, $arguments)
 //    {

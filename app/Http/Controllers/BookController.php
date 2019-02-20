@@ -34,4 +34,9 @@ class BookController extends Controller
         }
         return $this->bookRep->create($data);
     }
+	
+	public function getList()
+	{
+		return $this->bookRep->getList($this->userId);
+	}
 }
