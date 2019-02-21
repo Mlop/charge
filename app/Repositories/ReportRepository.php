@@ -41,8 +41,35 @@ class ReportRepository
         return DB::select($sql);
     }
 
-    public function getList($rep, $user_id)
+    public function getSummaryByMonth($type, $user_id)
     {
-        return $rep->builder(["user_id"=>$user_id])->orderBy("record_at", "DESC")->get();
+        switch ($type) {
+            case 'out':
+                $table = "outgo";
+                break;
+            case "in":
+                $table = "income";
+                break;
+            case "loan":
+                $table = "loan";
+                break;
+            default:
+                $table = "outgo";
+                break;
+        }
+        $sql = "SELECT ym,sum(cash) FROM (
+                  SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym FROM {$table} WHERE `user_id` = {$user_id}
+                )t1
+                GROUP BY ym
+                ORDER BY ym DESC";
+        return DB::select($sql);
+    }
+
+    public function getMonthList($rep, $user_id, $ym)
+    {
+        return $rep->builder(["user_id"=>$user_id])
+                    ->whereRaw("DATE_FORMAT(record_at,'%Y-%m')", $ym)
+                    ->orderBy("record_at", "DESC")
+                    ->get();
     }
 }
