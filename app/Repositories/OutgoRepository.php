@@ -38,4 +38,9 @@ class OutgoRepository
         }
         return $item->setRawAttributes($params)->save();
     }
+
+    public function builder($cond)
+    {
+        return Outgo::where($cond);
+    }
 }
