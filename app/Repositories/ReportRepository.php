@@ -27,14 +27,15 @@ class ReportRepository
 
     public function lastestRecord($user_id, $top = 4)
     {
-        $sql = "SELECT * FROM
+        $sql = "SELECT t1.*,cat.title,DATE_FORMAT(record_at,'%m-%d') date FROM
                  (
-                    SELECT *,'out' FROM outgo WHERE `user_id` = {$user_id}
+                    SELECT *,'out' as type FROM outgo WHERE `user_id` = {$user_id}
                     UNION
-                    SELECT *,'in' FROM income WHERE `user_id` = {$user_id}
+                    SELECT *,'in' as type FROM income WHERE `user_id` = {$user_id}
                     UNION
-                    SELECT *,'loan' FROM loan WHERE `user_id` = {$user_id}
+                    SELECT *,'loan' as type FROM loan WHERE `user_id` = {$user_id}
                 )t1
+				JOIN category cat ON t1.category_id=cat.id
                 ORDER BY record_at DESC
                 LIMIT {$top}";
 
