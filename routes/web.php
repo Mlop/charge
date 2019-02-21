@@ -66,5 +66,8 @@ $router->group(['middleware' => [ 'auth:api']], function($router) {//'json_forma
 	$router->post('/loan', 'LoanController@add');
 	//报表
     $router->get('/report', 'ReportController@index');
-    $router->get('/reports', 'ReportController@getList');
+    //按月概要
+    $router->get('/summary', 'ReportController@getSummaryList');
+    //某月详细
+    $router->get('/monthly', 'ReportController@getMonthList');
 });

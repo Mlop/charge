@@ -44,10 +44,16 @@ class ReportController extends Controller
 		return compact('totalOut', 'totalIn', 'items');
     }
 
-    public function getList(Request $request)
+    public function getSummaryList(Request $request)
     {
         $type = $request->input("type", "out");
+        return $this->reportRep->getSummaryByMonth($type, $this->userId);
+    }
 
+    public function getMonthList(Request $request)
+    {
+        $type = $request->input("type", "out");
+        $ym = $request->input("date", date('Y-m'));
         switch ($type) {
             case 'out':
                 $rep = $this->outRep;
@@ -59,9 +65,9 @@ class ReportController extends Controller
                 $rep = $this->loanRep;
                 break;
             default:
-                    $rep = $this->outRep;
+                $rep = $this->outRep;
                 break;
         }
-        return $this->reportRep->getList($rep, $this->userId);
+        $this->reportRep->getMonthList($rep, $this->userId, $ym);
     }
 }
