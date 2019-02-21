@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-02-19 17:19:20
+Date: 2019-02-21 16:29:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -120,7 +120,7 @@ CREATE TABLE `category_favorite` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `category_favorite_unique_category_id_user_id` (`category_id`,`user_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of category_favorite
@@ -184,6 +184,29 @@ INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, null, '2019-02-
 INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
 
 -- ----------------------------
+-- Table structure for loan
+-- ----------------------------
+DROP TABLE IF EXISTS `loan`;
+CREATE TABLE `loan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `book_id` int(10) unsigned DEFAULT NULL,
+  `cash` decimal(10,2) DEFAULT NULL,
+  `category_id` int(10) unsigned DEFAULT NULL,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `record_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of loan
+-- ----------------------------
+INSERT INTO `loan` VALUES ('4', '14', '2', '20.30', '5', null, null, '2019-02-13 17:59:44', '2019-02-13 17:59:44');
+INSERT INTO `loan` VALUES ('5', '14', '2', '50.30', '5', null, null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
+
+-- ----------------------------
 -- Table structure for outgo
 -- ----------------------------
 DROP TABLE IF EXISTS `outgo`;
@@ -194,14 +217,18 @@ CREATE TABLE `outgo` (
   `book_id` int(10) unsigned DEFAULT NULL,
   `category_id` int(10) unsigned DEFAULT NULL,
   `record_at` timestamp NULL DEFAULT NULL,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of outgo
 -- ----------------------------
+INSERT INTO `outgo` VALUES ('1', '14', '10.00', null, '33', '2019-01-30 00:00:00', '', '2019-02-20 10:46:28', '2019-02-20 10:46:28');
+INSERT INTO `outgo` VALUES ('2', '14', '10.00', null, '33', '2019-02-20 00:00:00', 'ab', '2019-02-20 10:47:03', '2019-02-20 10:47:03');
+INSERT INTO `outgo` VALUES ('3', '14', '30.00', null, '5', '2019-02-20 00:00:00', 'cc', '2019-02-20 10:49:01', '2019-02-20 10:49:01');
 
 -- ----------------------------
 -- Table structure for user
