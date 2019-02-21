@@ -37,4 +37,8 @@ class IncomeRepository
         }
         return $item->setRawAttributes($params)->save();
     }
+    public function builder($cond)
+    {
+        return Income::where($cond);
+    }
 }

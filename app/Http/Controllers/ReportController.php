@@ -9,27 +9,59 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use App\Repositories\BookRepository;
-// use Auth;
+ use App\Repositories\OutgoRepository;
+ use App\Repositories\ReportRepository;
+ use App\Repositories\IncomeRepository;
+ use App\Repositories\LoanRepository;
+ use Auth;
 
 class ReportController extends Controller
 {
-    // protected $bookRep;
+    protected $reportRep;
+    protected $outRep;
+    protected $inRep;
+    protected $loanRep;
     protected $userId;
 
-    public function __construct()
+    public function __construct(ReportRepository $reportRep, OutgoRepository $outRep, IncomeRepository $inRep, LoanRepository $loanRep)
     {
-        // $this->bookRep = $bookRep;
         $user = Auth::user();
         $this->userId = $user->id;
+        $this->reportRep = $reportRep;
+        $this->outRep = $outRep;
+        $this->inRep = $inRep;
+        $this->loanRep = $loanRep;
     }
 
     public function index(Request $request)
     {
 		//本月总支出
-
+        $totalOut =  $this->reportRep->getTotalInMonth($this->outRep, $this->userId);
 		//本月总收入
+        $totalIn =  $this->reportRep->getTotalInMonth($this->inRep, $this->userId);
 		//最近4条收支记录
-		
+        $items = $this->reportRep->lastestRecord($this->userId);
+		return compact('totalOut', 'totalIn', 'items');
+    }
+
+    public function getList(Request $request)
+    {
+        $type = $request->input("type", "out");
+
+        switch ($type) {
+            case 'out':
+                $rep = $this->outRep;
+                break;
+            case "in":
+                $rep = $this->inRep;
+                break;
+            case "loan":
+                $rep = $this->loanRep;
+                break;
+            default:
+                    $rep = $this->outRep;
+                break;
+        }
+        return $this->reportRep->getList($rep, $this->userId);
     }
 }

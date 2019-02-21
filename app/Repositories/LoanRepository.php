@@ -37,4 +37,8 @@ class LoanRepository
         }
         return $item->setRawAttributes($params)->save();
     }
+    public function builder($cond)
+    {
+        return Loan::where($cond);
+    }
 }
