@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50724
-Source Host           : 127.0.0.1:3306
+Source Server         : tmserver
+Source Server Version : 50640
+Source Host           : 119.27.163.89:3306
 Source Database       : charge
 
 Target Server Type    : MYSQL
-Target Server Version : 50724
+Target Server Version : 50640
 File Encoding         : 65001
 
-Date: 2019-02-21 16:29:56
+Date: 2019-02-24 21:30:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -139,28 +139,6 @@ INSERT INTO `category_favorite` VALUES ('43', '54', '14', '2019-02-19 13:30:11',
 INSERT INTO `category_favorite` VALUES ('44', '55', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
 
 -- ----------------------------
--- Table structure for delete_user_category
--- ----------------------------
-DROP TABLE IF EXISTS `delete_user_category`;
-CREATE TABLE `delete_user_category` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `category_id` int(10) unsigned NOT NULL,
-  `is_favorite` enum('no','yes') DEFAULT 'no',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of delete_user_category
--- ----------------------------
-INSERT INTO `delete_user_category` VALUES ('1', '14', '2', 'no', null, null);
-INSERT INTO `delete_user_category` VALUES ('2', '14', '3', 'no', null, null);
-INSERT INTO `delete_user_category` VALUES ('3', '14', '4', 'no', null, null);
-INSERT INTO `delete_user_category` VALUES ('4', '14', '10', 'no', null, null);
-
--- ----------------------------
 -- Table structure for income
 -- ----------------------------
 DROP TABLE IF EXISTS `income`;
@@ -180,8 +158,8 @@ CREATE TABLE `income` (
 -- ----------------------------
 -- Records of income
 -- ----------------------------
-INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, null, '2019-02-13 17:59:44', '2019-02-13 17:59:44');
-INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
+INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, '2019-01-28 21:14:10', '2019-02-13 17:59:44', '2019-02-13 17:59:44');
+INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, '2019-02-18 21:14:15', '2019-02-13 18:00:16', '2019-02-13 18:00:16');
 
 -- ----------------------------
 -- Table structure for loan
@@ -203,8 +181,8 @@ CREATE TABLE `loan` (
 -- ----------------------------
 -- Records of loan
 -- ----------------------------
-INSERT INTO `loan` VALUES ('4', '14', '2', '20.30', '5', null, null, '2019-02-13 17:59:44', '2019-02-13 17:59:44');
-INSERT INTO `loan` VALUES ('5', '14', '2', '50.30', '5', null, null, '2019-02-13 18:00:16', '2019-02-13 18:00:16');
+INSERT INTO `loan` VALUES ('4', '14', '2', '20.30', '5', null, '2019-01-29 21:14:24', '2019-02-13 17:59:44', '2019-02-13 17:59:44');
+INSERT INTO `loan` VALUES ('5', '14', '2', '50.30', '5', null, '2019-01-30 21:14:28', '2019-02-13 18:00:16', '2019-02-13 18:00:16');
 
 -- ----------------------------
 -- Table structure for outgo
@@ -216,8 +194,8 @@ CREATE TABLE `outgo` (
   `cash` decimal(10,2) DEFAULT NULL,
   `book_id` int(10) unsigned DEFAULT NULL,
   `category_id` int(10) unsigned DEFAULT NULL,
-  `record_at` timestamp NULL DEFAULT NULL,
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `record_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -226,9 +204,9 @@ CREATE TABLE `outgo` (
 -- ----------------------------
 -- Records of outgo
 -- ----------------------------
-INSERT INTO `outgo` VALUES ('1', '14', '10.00', null, '33', '2019-01-30 00:00:00', '', '2019-02-20 10:46:28', '2019-02-20 10:46:28');
-INSERT INTO `outgo` VALUES ('2', '14', '10.00', null, '33', '2019-02-20 00:00:00', 'ab', '2019-02-20 10:47:03', '2019-02-20 10:47:03');
-INSERT INTO `outgo` VALUES ('3', '14', '30.00', null, '5', '2019-02-20 00:00:00', 'cc', '2019-02-20 10:49:01', '2019-02-20 10:49:01');
+INSERT INTO `outgo` VALUES ('1', '14', '10.00', null, '33', '', '2019-01-30 00:00:00', '2019-02-20 10:46:28', '2019-02-20 10:46:28');
+INSERT INTO `outgo` VALUES ('2', '14', '10.00', null, '33', 'ab', '2019-02-20 00:00:00', '2019-02-20 10:47:03', '2019-02-20 10:47:03');
+INSERT INTO `outgo` VALUES ('3', '14', '30.00', null, '5', 'cc', '2019-02-20 00:00:00', '2019-02-20 10:49:01', '2019-02-20 10:49:01');
 
 -- ----------------------------
 -- Table structure for user
@@ -236,11 +214,11 @@ INSERT INTO `outgo` VALUES ('3', '14', '30.00', null, '5', '2019-02-20 00:00:00'
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `delete_email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
   `delete_remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `delete_api_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,

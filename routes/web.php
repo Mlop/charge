@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'charge '.$router->app->version();
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {//'json_formatter'
