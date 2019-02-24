@@ -40,7 +40,9 @@ class UserController extends Controller
             $key = "phone";
         }
         if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
-            return ['code' => 404, 'msg' => 'user_not_found'];
+			if (!$token = $this->jwt->attempt(["name"=>$account, "password"=>$password])) {
+				return ['code' => 404, 'msg' => 'user_not_found'];
+			}
         }
 		$user = Auth::user();
 		$user->token = $token;
