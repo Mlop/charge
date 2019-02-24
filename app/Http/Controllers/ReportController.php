@@ -68,6 +68,6 @@ class ReportController extends Controller
                 $rep = $this->outRep;
                 break;
         }
-        $this->reportRep->getMonthList($rep, $this->userId, $ym);
+        return $this->reportRep->getMonthList($rep, $this->userId, $ym);
     }
 }

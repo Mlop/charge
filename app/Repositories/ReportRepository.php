@@ -58,7 +58,7 @@ class ReportRepository
                 $table = "outgo";
                 break;
         }
-        $sql = "SELECT ym,sum(cash) FROM (
+        $sql = "SELECT ym,sum(cash) as total FROM (
                   SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym FROM {$table} WHERE `user_id` = {$user_id}
                 )t1
                 GROUP BY ym
@@ -69,7 +69,7 @@ class ReportRepository
     public function getMonthList($rep, $user_id, $ym)
     {
         return $rep->builder(["user_id"=>$user_id])
-                    ->whereRaw("DATE_FORMAT(record_at,'%Y-%m')", $ym)
+                    ->whereRaw("DATE_FORMAT(record_at,'%Y-%m')='{$ym}'")
                     ->orderBy("record_at", "DESC")
                     ->get();
     }
