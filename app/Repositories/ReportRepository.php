@@ -25,26 +25,47 @@ class ReportRepository
             ->sum("cash");
     }
 
+	public function getDetailAll($user_id)
+	{
+		$sql = "SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'out' as type FROM outgo WHERE `user_id` = {$user_id}
+				UNION
+				SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'in' as type FROM income WHERE `user_id` = {$user_id}
+				UNION
+				SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'loan' as type FROM loan WHERE `user_id` = {$user_id}";
+		return $sql;
+	}
+	public function getDetaiGroup($user_id)
+	{
+		$sql = "SELECT t1.*,cat.title,ym FROM
+                 (
+                    ".$this->getDetailAll($user_id)."
+                )t1
+				JOIN category cat ON t1.category_id=cat.id";
+		return $sql;
+	}
     public function lastestRecord($user_id, $top = 4)
     {
-        $sql = "SELECT t1.*,cat.title,DATE_FORMAT(record_at,'%m-%d') date FROM
-                 (
-                    SELECT *,'out' as type FROM outgo WHERE `user_id` = {$user_id}
-                    UNION
-                    SELECT *,'in' as type FROM income WHERE `user_id` = {$user_id}
-                    UNION
-                    SELECT *,'loan' as type FROM loan WHERE `user_id` = {$user_id}
-                )t1
-				JOIN category cat ON t1.category_id=cat.id
-                ORDER BY record_at DESC
+		$sql = $this->getDetaiGroup($user_id).
+				" ORDER BY record_at DESC
                 LIMIT {$top}";
+//         $sql = "SELECT t1.*,cat.title,ym FROM
+//                  (
+//                     SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'out' as type FROM outgo WHERE `user_id` = {$user_id}
+//                     UNION
+//                     SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'in' as type FROM income WHERE `user_id` = {$user_id}
+//                     UNION
+//                     SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym,'loan' as type FROM loan WHERE `user_id` = {$user_id}
+//                 )t1
+// 				JOIN category cat ON t1.category_id=cat.id
+//                 ORDER BY record_at DESC
+//                 LIMIT {$top}";
 
         return DB::select($sql);
     }
 
-    public function getSummaryByMonth($type, $user_id)
+    public function getSummaryByMonth($user_id)
     {
-        switch ($type) {
+        /*switch ($type) {
             case 'out':
                 $table = "outgo";
                 break;
@@ -62,15 +83,37 @@ class ReportRepository
                   SELECT *,DATE_FORMAT(record_at,'%Y-%m') ym FROM {$table} WHERE `user_id` = {$user_id}
                 )t1
                 GROUP BY ym
+                ORDER BY ym DESC";*/
+		$sql = "SELECT ym,sum(cash) as total FROM (
+					".$this->getDetailAll($user_id)."
+                )t1
+                GROUP BY ym
                 ORDER BY ym DESC";
-        return DB::select($sql);
+        $result = DB::select($sql);
+		$data = [];
+		foreach ($result as $row) {
+			// dd($row->ym);
+			$sql = "SELECT ym,sum(cash) as total,type FROM (
+						".$this->getDetailAll($user_id)."
+			        )t1
+					WHERE ym='".$row->ym."'
+			        GROUP BY ym,type
+			        ORDER BY ym DESC";//echo ($sql);exit;
+			$row->item = DB::select($sql);
+			$data[] = $row;
+		}
+		
+		
+		// $result = DB::select($sql);
+		return $data;
     }
-
-    public function getMonthList($rep, $user_id, $ym)
+    public function getMonthList($user_id, $ym)
     {
-        return $rep->builder(["user_id"=>$user_id])
-                    ->whereRaw("DATE_FORMAT(record_at,'%Y-%m')='{$ym}'")
-                    ->orderBy("record_at", "DESC")
-                    ->get();
+		$sql = $this->getDetaiGroup($user_id)." WHERE ym='{$ym}' ORDER BY record_at DESC";
+		return DB::select($sql);
+//         return $rep->builder(["user_id"=>$user_id])
+//                     ->whereRaw("DATE_FORMAT(record_at,'%Y-%m')='{$ym}'")
+//                     ->orderBy("record_at", "DESC")
+//                     ->get();
     }
 }

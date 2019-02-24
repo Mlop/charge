@@ -46,28 +46,28 @@ class ReportController extends Controller
 
     public function getSummaryList(Request $request)
     {
-        $type = $request->input("type", "out");
-        return $this->reportRep->getSummaryByMonth($type, $this->userId);
+        // $type = $request->input("type", "out");
+        return $this->reportRep->getSummaryByMonth($this->userId);
     }
 
     public function getMonthList(Request $request)
     {
-        $type = $request->input("type", "out");
+        // $type = $request->input("type", "out");
         $ym = $request->input("date", date('Y-m'));
-        switch ($type) {
-            case 'out':
-                $rep = $this->outRep;
-                break;
-            case "in":
-                $rep = $this->inRep;
-                break;
-            case "loan":
-                $rep = $this->loanRep;
-                break;
-            default:
-                $rep = $this->outRep;
-                break;
-        }
-        return $this->reportRep->getMonthList($rep, $this->userId, $ym);
+//         switch ($type) {
+//             case 'out':
+//                 $rep = $this->outRep;
+//                 break;
+//             case "in":
+//                 $rep = $this->inRep;
+//                 break;
+//             case "loan":
+//                 $rep = $this->loanRep;
+//                 break;
+//             default:
+//                 $rep = $this->outRep;
+//                 break;
+//         }
+        return $this->reportRep->getMonthList($this->userId, $ym);
     }
 }
