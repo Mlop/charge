@@ -15,14 +15,25 @@ class BookRepository
     {
         return Book::where($data)->exists();
     }
-
-    public function create($data)
+	public function get($id)
     {
-        return Book::create($data);
+		return Book::find($id);
     }
+	public function edit($id, $params)
+	{
+		return $this->get($id)->update($params);
+	}
 	
+	public function add($params)
+	{
+		return Book::create($params);
+	}
 	public function getList($user_id)
 	{
 		return Book::where("user_id", $user_id)->get();
+	}
+	public function delete($id)
+	{
+		return $this->get($id)->delete();
 	}
 }
