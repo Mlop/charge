@@ -99,6 +99,13 @@ class UserController extends Controller
 
     public function getUser()
     {
-        return Auth::user();
+        $user = Auth::user();
+		if (!$user->phone) {
+			$user->phone = "";
+		}
+		if (!$user->email) {
+			$user->email = "";
+		}
+		return $user;
     }
 }

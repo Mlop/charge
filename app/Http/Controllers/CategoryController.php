@@ -29,12 +29,18 @@ class CategoryController extends Controller
         $parent_id = $request->input('parent_id', 0);
 		$include_sub = $request->input('include_sub', false);
         $list = $this->catRep->getList($type, $parent_id);
+		$subTotal = $allSubTotal = 0;
         foreach ($list as $i => $cat) {
-            $list[$i]['total'] = $this->catRep->count($type, $cat->id);
+			$subTotal = $this->catRep->count($type, $cat->id);
+            $list[$i]['total'] = $subTotal;
+			$allSubTotal += $subTotal;
 			if ($include_sub) {
 				$list[$i]['sub'] = $this->catRep->getList($type, $cat->id);
 			}
         }
+		if ($allSubTotal == 0) {
+			return [["id"=>0, "title"=>"常用", "sub"=>$list]];
+		}
         return $list;
     }
 	public function getFavoriteList(Request $request)
