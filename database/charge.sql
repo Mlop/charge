@@ -1,19 +1,41 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : tmserver
-Source Server Version : 50640
-Source Host           : 119.27.163.89:3306
+Source Server         : localhost_account
+Source Server Version : 50724
+Source Host           : 127.0.0.1:3306
 Source Database       : charge
 
 Target Server Type    : MYSQL
-Target Server Version : 50640
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-02-24 21:30:23
+Date: 2019-02-27 20:13:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for account
+-- ----------------------------
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `cash` decimal(10,2) DEFAULT NULL,
+  `book_id` int(10) unsigned DEFAULT NULL,
+  `category_id` int(10) unsigned DEFAULT NULL,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` enum('loan','income','outgo') COLLATE utf8mb4_unicode_ci DEFAULT 'outgo',
+  `record_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of account
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for book
@@ -26,13 +48,11 @@ CREATE TABLE `book` (
   `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES ('2', '豆豆', '14', '2019-02-13 17:45:53', '2019-02-13 17:45:53');
-INSERT INTO `book` VALUES ('4', '豆豆红包', '14', '2019-02-13 17:50:56', '2019-02-13 17:50:56');
 
 -- ----------------------------
 -- Table structure for category
@@ -41,68 +61,68 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type` enum('loan','out','in') COLLATE utf8mb4_unicode_ci DEFAULT 'in',
+  `type` enum('loan','outgo','in','out','income') COLLATE utf8mb4_unicode_ci DEFAULT 'in',
   `parent_category_id` int(10) unsigned DEFAULT '0',
-  `user_id` int(10) unsigned DEFAULT NULL,
+  `user_id` int(10) unsigned DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES ('1', '餐饮', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('2', '早餐', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('3', '午餐', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('4', '晚餐', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('5', '饮料水果', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('6', '买菜原料', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('7', '油盐酱醋', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('8', '餐饮其他', 'out', '1', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('9', '交通', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('10', '打车', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('11', '加油', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('12', '停车费', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('13', '火车', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('14', '长途汽车', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('15', '公交', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('16', '地铁', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('17', '交通其他', 'out', '9', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('18', '购物', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('19', '服装鞋包', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('20', '家居百货', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('21', '宝宝用品', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('22', '烟酒', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('23', '电子数码', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('24', '报刊书籍', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('25', '电器', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('26', '购物其他', 'out', '18', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('27', '娱乐', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('28', '旅游度假', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('29', '电影', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('30', '运动健身', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('31', '花鸟宠物', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('32', '聚会玩乐', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('33', '娱乐其他', 'out', '27', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('34', '居家', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('35', '手机电话', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('36', '水电燃气', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('37', '生活费', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('38', '房款房贷', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('39', '快递邮政', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('40', '物业', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('41', '消费贷款', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('42', '生活其他', 'out', '34', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('43', '人情', 'out', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('44', '礼金红包', 'out', '43', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('45', '物品', 'out', '43', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('46', '人情其他', 'out', '43', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('47', '红包', 'in', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('48', '工资薪水', 'in', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('49', '营业收入', 'in', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('50', '奖金', 'in', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
-INSERT INTO `category` VALUES ('51', '其他', 'in', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
+INSERT INTO `category` VALUES ('1', '餐饮', 'outgo', '0', null, '2019-02-27 19:36:22', '2019-02-27 19:36:22');
+INSERT INTO `category` VALUES ('2', '早餐', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('3', '午餐', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('4', '晚餐', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('5', '饮料水果', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('6', '买菜原料', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('7', '油盐酱醋', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('8', '餐饮其他', 'outgo', '1', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('9', '交通', 'outgo', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('10', '打车', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('11', '加油', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('12', '停车费', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('13', '火车', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('14', '长途汽车', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('15', '公交', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('16', '地铁', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('17', '交通其他', 'outgo', '9', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('18', '购物', 'outgo', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('19', '服装鞋包', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('20', '家居百货', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('21', '宝宝用品', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('22', '烟酒', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('23', '电子数码', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('24', '报刊书籍', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('25', '电器', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('26', '购物其他', 'outgo', '18', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('27', '娱乐', 'outgo', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('28', '旅游度假', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('29', '电影', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('30', '运动健身', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('31', '花鸟宠物', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('32', '聚会玩乐', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('33', '娱乐其他', 'outgo', '27', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('34', '居家', 'outgo', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('35', '手机电话', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('36', '水电燃气', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('37', '生活费', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('38', '房款房贷', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('39', '快递邮政', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('40', '物业', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('41', '消费贷款', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('42', '生活其他', 'outgo', '34', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('43', '人情', 'outgo', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('44', '礼金红包', 'outgo', '43', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('45', '物品', 'outgo', '43', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('46', '人情其他', 'outgo', '43', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('47', '红包', 'income', '0', null, '2019-02-27 19:43:41', '2019-02-27 19:43:41');
+INSERT INTO `category` VALUES ('48', '工资薪水', 'income', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('49', '营业收入', 'income', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('50', '奖金', 'income', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
+INSERT INTO `category` VALUES ('51', '其他', 'income', '0', null, '2019-02-27 19:33:47', '2019-02-27 19:33:47');
 INSERT INTO `category` VALUES ('52', '借入', 'loan', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
 INSERT INTO `category` VALUES ('53', '借出', 'loan', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
 INSERT INTO `category` VALUES ('54', '还款', 'loan', '0', null, '2019-02-13 11:52:53', '2019-02-13 11:52:53');
@@ -120,93 +140,11 @@ CREATE TABLE `category_favorite` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `category_favorite_unique_category_id_user_id` (`category_id`,`user_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of category_favorite
 -- ----------------------------
-INSERT INTO `category_favorite` VALUES ('33', '2', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('34', '3', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('35', '4', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('36', '10', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('37', '47', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('38', '48', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('39', '49', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('40', '50', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('41', '52', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('42', '53', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('43', '54', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-INSERT INTO `category_favorite` VALUES ('44', '55', '14', '2019-02-19 13:30:11', '2019-02-19 13:30:11');
-
--- ----------------------------
--- Table structure for income
--- ----------------------------
-DROP TABLE IF EXISTS `income`;
-CREATE TABLE `income` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `book_id` int(10) unsigned DEFAULT NULL,
-  `cash` decimal(10,2) DEFAULT NULL,
-  `category_id` int(10) unsigned DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `record_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of income
--- ----------------------------
-INSERT INTO `income` VALUES ('4', '14', '2', '20.30', '5', null, '2019-01-28 21:14:10', '2019-02-13 17:59:44', '2019-02-13 17:59:44');
-INSERT INTO `income` VALUES ('5', '14', '2', '50.30', '5', null, '2019-02-18 21:14:15', '2019-02-13 18:00:16', '2019-02-13 18:00:16');
-
--- ----------------------------
--- Table structure for loan
--- ----------------------------
-DROP TABLE IF EXISTS `loan`;
-CREATE TABLE `loan` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `book_id` int(10) unsigned DEFAULT NULL,
-  `cash` decimal(10,2) DEFAULT NULL,
-  `category_id` int(10) unsigned DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `record_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of loan
--- ----------------------------
-INSERT INTO `loan` VALUES ('4', '14', '2', '20.30', '5', null, '2019-01-29 21:14:24', '2019-02-13 17:59:44', '2019-02-13 17:59:44');
-INSERT INTO `loan` VALUES ('5', '14', '2', '50.30', '5', null, '2019-01-30 21:14:28', '2019-02-13 18:00:16', '2019-02-13 18:00:16');
-
--- ----------------------------
--- Table structure for outgo
--- ----------------------------
-DROP TABLE IF EXISTS `outgo`;
-CREATE TABLE `outgo` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `cash` decimal(10,2) DEFAULT NULL,
-  `book_id` int(10) unsigned DEFAULT NULL,
-  `category_id` int(10) unsigned DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `record_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of outgo
--- ----------------------------
-INSERT INTO `outgo` VALUES ('1', '14', '10.00', null, '33', '', '2019-01-30 00:00:00', '2019-02-20 10:46:28', '2019-02-20 10:46:28');
-INSERT INTO `outgo` VALUES ('2', '14', '10.00', null, '33', 'ab', '2019-02-20 00:00:00', '2019-02-20 10:47:03', '2019-02-20 10:47:03');
-INSERT INTO `outgo` VALUES ('3', '14', '30.00', null, '5', 'cc', '2019-02-20 00:00:00', '2019-02-20 10:49:01', '2019-02-20 10:49:01');
 
 -- ----------------------------
 -- Table structure for user
@@ -217,19 +155,13 @@ CREATE TABLE `user` (
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `delete_email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `delete_remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `delete_api_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'vera', null, 'vera0228@sohu.com', null, '$2y$10$mMm0yhuvdI7xDVuXgFBTOeYzlIXBmA04PLvDdLK.wz.171WMcDZ9K', null, 'U9lREUtPNN6qSnjUSzk6ePLawyFtXUIfAKWioE2DwfkIvdJiORuytx5v1yuX', '2018-11-09 17:11:33', '2018-11-12 19:35:12');
-INSERT INTO `user` VALUES ('6', 'fish', '11115', 'aa@sohu.com', null, '$2y$10$Atlr.6VPisqSI4Fk1mZnZOysiPRk8mp5xWxBlF/g25/gK22b6Pkre', null, 'rqPcGfEJEZlEG0QvMj8rx4WwQvhsuoNCxgvhap5tR4CqSKjrdCAttWBRNB1x', '2018-11-12 01:50:09', '2018-11-16 06:08:50');
-INSERT INTO `user` VALUES ('14', 'qAhO8t', null, 'nancy@aa.com', null, '$2y$10$PfyB07gENJDefSu73GyyMu3jE5Qfaun0IaxkuVy81/AiMuXDYh5pG', null, null, '2019-02-13 17:13:08', '2019-02-13 17:13:08');

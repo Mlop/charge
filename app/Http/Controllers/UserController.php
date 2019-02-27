@@ -57,7 +57,7 @@ class UserController extends Controller
         if (!preg_match('/^\d+$/', $account) && strpos($account, '@') == false) {
             return ['code'=>1, 'msg'=>'账号格式不正确'];
         }
-        $rules = ['password'=>'required|min:4|max:20'];
+        $rules = ['password'=>'required|min:4|max:20', 'name'=>'unique:user,name'];
         //手机号注册
         if (preg_match('/^\d+$/', $account)) {
             $key = 'phone';
@@ -73,16 +73,19 @@ class UserController extends Controller
             'account.max'=>'账号最长11位',
             'account.email'=>'账号格式不正确',
             'password.required'=>'请输入密码',
+			'name.unique'=>'账号已存在',
         ];
         $validator = Validator::make($data, $rules, $messages);
         if ($validator->fails()) {
             return ['code'=>1, 'msg'=>$validator->errors()->first()];
         }
         $data['password'] = Hash::make($password);
-        $data['name'] = str_random(6);
+		if (!$name) {
+			$data['name'] = str_random(6);
+		}
         $user = $this->userRep->create($data);
         if (!$user) {
-            return ['code'=>1, '注册失败'];
+            return ['code'=>1, 'msg'=>'注册失败'];
         }
         //为新用户添加通用分类
         event(new RegisterEvent($this->userRep, $user));
