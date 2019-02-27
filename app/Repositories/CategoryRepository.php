@@ -12,8 +12,8 @@ use DB;
 
 class CategoryRepository
 {
-    const TYPE_IN = 'in';
-    const TYPE_OUT = 'out';
+    const TYPE_IN = 'income';
+    const TYPE_OUT = 'outgo';
     const TYPE_LOAN = 'loan';
 	const FAVORITE_YES = 'yes';
 	const FAVORITE_NO = 'no';
@@ -30,7 +30,8 @@ class CategoryRepository
      */
     public function getFavorite($user_id, $type = self::TYPE_IN)
     {
-        return Category::join("category_favorite", "category.id", "=", "category_favorite.category_id")
+        return Category::select("category.*")
+			->join("category_favorite", "category.id", "=", "category_favorite.category_id")
             ->where("category.type", $type)
             ->where("category_favorite.user_id", $user_id)
             ->get();
@@ -79,5 +80,9 @@ class CategoryRepository
 			return false;
 		}
 		return true;
+	}
+	public function getField($id, $field = "title")
+	{
+		return Category::where("id", $id)->value($field);
 	}
 }

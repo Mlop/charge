@@ -1,28 +1,28 @@
 <?php
 /**
- * 收入数据与业务中间层
+ * 帐目数据与业务中间层
  * User: Vera
- * Date: 2019/2/13
+ * Date: 2019/2/27
  * Time: 9:51
  */
 namespace App\Repositories;
 
-use App\Models\Outgo;
+use App\Models\Account;
 
-class OutgoRepository
+class AccountRepository
 {
     public function exists($data)
     {
-        return Outgo::where($data)->exists();
+        return Account::where($data)->exists();
     }
 
     public function get($id)
     {
-        return Outgo::find($id);
+        return Account::find($id);
     }
     public function create($data)
     {
-        return Outgo::create($data);
+        return Account::create($data);
     }
 
     public function delete($id)
@@ -36,11 +36,11 @@ class OutgoRepository
         if (!$item) {
             return false;
         }
-        return $item->setRawAttributes($params)->save();
+		return $item->update($params);
     }
 
     public function builder($cond)
     {
-        return Outgo::where($cond);
+        return Account::where($cond);
     }
 }
