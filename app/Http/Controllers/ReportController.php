@@ -10,9 +10,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\ReportRepository;
-//  use App\Repositories\OutgoRepository;
-//  use App\Repositories\IncomeRepository;
-//  use App\Repositories\LoanRepository;
 use App\Repositories\AccountRepository;
 use Auth;
 
@@ -53,20 +50,12 @@ class ReportController extends Controller
     {
         $type = $request->input("type", "outgo");
         $ym = $request->input("date", date('Y-m'));
-//         switch ($type) {
-//             case 'out':
-//                 $rep = $this->outRep;
-//                 break;
-//             case "in":
-//                 $rep = $this->inRep;
-//                 break;
-//             case "loan":
-//                 $rep = $this->loanRep;
-//                 break;
-//             default:
-//                 $rep = $this->outRep;
-//                 break;
-//         }
         return $this->reportRep->getMonthList($this->userId, $ym);
     }
+	
+	public function getYearSummary(Request $request)
+	{
+		$top = $request->input("top", 2);
+		return $this->reportRep->getYearSummary($this->userId, $top);
+	}
 }

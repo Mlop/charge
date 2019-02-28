@@ -51,4 +51,6 @@ $router->group(['middleware' => ['json_formatter', 'auth:api']], function($route
     $router->get('/summary', 'ReportController@getSummaryList');
     //某月详细
     $router->get('/monthly', 'ReportController@getMonthList');
+	//年度top2账单
+	$router->get('/yearly', 'ReportController@getYearSummary');
 });
