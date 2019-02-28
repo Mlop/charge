@@ -26,9 +26,10 @@ class ReportRepository
             ->sum("cash");
     }
 
-	public function getDetailAll($user_id)
+	public function getDetailAll($user_id, $fields = "")
 	{
-		$sql = "SELECT acc.*, DATE_FORMAT(record_at, '%Y-%m') ym
+		$fields = $fields ? ",".$fields : "";
+		$sql = "SELECT acc.*, DATE_FORMAT(record_at, '%Y-%m') ym, DATE_FORMAT(record_at, '%Y') y, DATE_FORMAT(record_at, '%m') m{$fields}
 							FROM account acc
 							WHERE acc.`user_id` = {$user_id}";
 		return $sql;
@@ -84,4 +85,34 @@ class ReportRepository
 		$sql = $this->getDetaiGroup($user_id)." WHERE ym='{$ym}' ORDER BY record_at DESC";
 		return DB::select($sql);
     }
+	public function getYearSummary($user_id, $top = 2)
+	{
+		$sql = "SELECT y 
+				FROM (".$this->getDetailAll($user_id).") t1
+				GROUP BY y
+				ORDER BY y DESC
+				LIMIT {$top}";
+		$result = DB::select($sql);	
+		$sortField = "case type when 'outgo' then 1 when 'income' then 2 when 'loan' then 3 end as sort";
+		$data = [];
+		foreach ($result as $row) {
+			$sql = "SELECT y,type,sum(cash) total,sort
+					FROM (".$this->getDetailAll($user_id, $sortField).") t1
+					WHERE y='{$row->y}'
+					GROUP BY type
+					UNION 
+					SELECT y,'balance' as type,sum(a) total,4 as sort 
+					FROM(
+						SELECT sort, y,type,sum(cash) t,if(type='outgo',-1*sum(cash), sum(cash)) a 
+						FROM (".$this->getDetailAll($user_id, $sortField).") t1
+						WHERE y='{$row->y}'
+						AND type in('".CategoryRepository::TYPE_OUT."', '".CategoryRepository::TYPE_IN."')
+						GROUP BY type
+					) t2
+					GROUP BY y
+					ORDER BY sort ASC";
+			$data[] = ['year'=>$row->y, 'items'=>DB::select($sql)];
+		}
+		return $data;
+	}
 }
