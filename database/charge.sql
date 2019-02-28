@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost_account
-Source Server Version : 50724
-Source Host           : 127.0.0.1:3306
+Source Server         : tmserver
+Source Server Version : 50640
+Source Host           : 119.27.163.89:3306
 Source Database       : charge
 
 Target Server Type    : MYSQL
-Target Server Version : 50724
+Target Server Version : 50640
 File Encoding         : 65001
 
-Date: 2019-02-27 20:13:09
+Date: 2019-02-28 21:53:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,11 +31,26 @@ CREATE TABLE `account` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of account
 -- ----------------------------
+INSERT INTO `account` VALUES ('1', '4', '10000.00', '1', '47', '爸给豆豆压岁钱', 'income', '2019-02-04 00:00:00', '2019-02-27 23:32:46', '2019-02-27 23:32:46');
+INSERT INTO `account` VALUES ('2', '4', '500.00', '1', '47', '小舅给豆豆压岁钱', 'income', '2019-02-06 00:00:00', '2019-02-27 23:33:33', '2019-02-27 23:33:33');
+INSERT INTO `account` VALUES ('3', '4', '1000.00', '1', '47', '弟给豆豆', 'income', '2019-02-09 00:00:00', '2019-02-27 23:35:58', '2019-02-27 23:35:58');
+INSERT INTO `account` VALUES ('4', '4', '1000.00', '1', '52', '给子研伟城红包', 'outgo', '2019-02-09 00:00:00', '2019-02-27 23:36:57', '2019-02-28 12:29:58');
+INSERT INTO `account` VALUES ('5', '4', '400.00', '1', '47', '二舅给豆豆', 'income', '2019-02-06 00:00:00', '2019-02-28 11:24:51', '2019-02-28 11:24:51');
+INSERT INTO `account` VALUES ('6', '4', '200.00', '1', '47', '二舅家表妹一给豆豆', 'income', '2019-02-06 00:00:00', '2019-02-28 11:26:30', '2019-02-28 11:26:30');
+INSERT INTO `account` VALUES ('7', '4', '200.00', '1', '47', '二舅家表妹二给豆豆', 'income', '2019-02-06 00:00:00', '2019-02-28 11:26:38', '2019-02-28 11:26:38');
+INSERT INTO `account` VALUES ('8', '4', '400.00', '1', '47', '大舅给豆豆', 'income', '2019-02-06 00:00:00', '2019-02-28 11:27:28', '2019-02-28 11:27:28');
+INSERT INTO `account` VALUES ('9', '4', '100.00', '1', '47', '秀丽给豆豆', 'income', '2019-02-08 00:00:00', '2019-02-28 11:28:01', '2019-02-28 11:28:01');
+INSERT INTO `account` VALUES ('10', '4', '200.00', '1', '47', '小叔给豆豆', 'income', '2019-02-08 00:00:00', '2019-02-28 11:28:24', '2019-02-28 11:28:24');
+INSERT INTO `account` VALUES ('11', '4', '200.00', '1', '47', '小姨给豆豆', 'income', '2019-02-08 00:00:00', '2019-02-28 11:28:36', '2019-02-28 11:28:36');
+INSERT INTO `account` VALUES ('12', '4', '200.00', '1', '47', '舅奶奶给豆豆', 'income', '2019-02-07 00:00:00', '2019-02-28 11:28:57', '2019-02-28 11:30:50');
+INSERT INTO `account` VALUES ('13', '4', '200.00', '1', '47', '伯伯妈妈给豆豆', 'income', '2019-02-07 00:00:00', '2019-02-28 11:29:30', '2019-02-28 11:29:30');
+INSERT INTO `account` VALUES ('14', '4', '100.00', '1', '3', '', 'outgo', '2019-02-28 00:00:00', '2019-02-28 13:14:35', '2019-02-28 13:14:35');
+INSERT INTO `account` VALUES ('15', '4', '100.00', '1', '3', '', 'outgo', '2019-02-28 00:00:00', '2019-02-28 13:14:38', '2019-02-28 13:14:38');
 
 -- ----------------------------
 -- Table structure for book
@@ -48,11 +63,12 @@ CREATE TABLE `book` (
   `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
+INSERT INTO `book` VALUES ('1', '日常账本', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
 
 -- ----------------------------
 -- Table structure for category
@@ -140,11 +156,23 @@ CREATE TABLE `category_favorite` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `category_favorite_unique_category_id_user_id` (`category_id`,`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of category_favorite
 -- ----------------------------
+INSERT INTO `category_favorite` VALUES ('13', '2', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('14', '3', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('15', '4', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('16', '10', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('17', '47', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('18', '48', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('19', '49', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('20', '50', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('21', '52', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('22', '53', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('23', '54', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
+INSERT INTO `category_favorite` VALUES ('24', '55', '4', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
 
 -- ----------------------------
 -- Table structure for user
@@ -160,8 +188,11 @@ CREATE TABLE `user` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES ('1', 'nancy', null, 'vera0228@sohu.com', '$2y$10$NO4uT5Fltnty4vGeHig0VOTMFg/PaWH0i007aCXvDluij.lzjHfne', '2019-02-27 20:51:00', '2019-02-27 20:51:00');
+INSERT INTO `user` VALUES ('2', '1234', '1234', null, '$2y$10$c3nd.MiwTsRweq8d24CBDefVlMsqrCCF3ftXvWMM4QlErVzEry9KC', '2019-02-27 21:15:51', '2019-02-27 21:15:51');
+INSERT INTO `user` VALUES ('4', 'zch', '18108147090', null, '$2y$10$jq3Pn4cESYn63slft6tUY../Fvl8Dpbw3o2UxBb890A66KlWZlvPO', '2019-02-27 21:48:58', '2019-02-27 21:48:58');
