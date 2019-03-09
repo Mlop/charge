@@ -29,7 +29,8 @@ class CategoryController extends Controller
         $parent_id = $request->input('parent_id', 0);
 		$include_sub = $request->input('include_sub', false);
         $list = $this->catRep->getList($type, $parent_id);
-		$subTotal = $allSubTotal = 0;
+
+		$allSubTotal = count($list);
         foreach ($list as $i => $cat) {
 			$subTotal = $this->catRep->count($type, $cat->id);
             $list[$i]['total'] = $subTotal;
@@ -38,7 +39,7 @@ class CategoryController extends Controller
 				$list[$i]['sub'] = $this->catRep->getList($type, $cat->id);
 			}
         }
-		if ($allSubTotal == 0) {
+		if ($allSubTotal == 0 && $parent_id == 0) {
 			return [["id"=>0, "title"=>"常用", "sub"=>$list]];
 		}
         return $list;
