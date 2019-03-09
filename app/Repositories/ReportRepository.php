@@ -107,7 +107,7 @@ class ReportRepository
 						FROM (".$this->getDetailAll($user_id, $sortField).") t1
 						WHERE y='{$row->y}'
 						AND type in('".CategoryRepository::TYPE_OUT."', '".CategoryRepository::TYPE_IN."')
-						GROUP BY type
+						GROUP BY type,sort
 					) t2
 					GROUP BY y
 					ORDER BY sort ASC";
