@@ -99,7 +99,7 @@ class ReportRepository
 			$sql = "SELECT y,type,sum(cash) total,sort
 					FROM (".$this->getDetailAll($user_id, $sortField).") t1
 					WHERE y='{$row->y}'
-					GROUP BY type
+					GROUP BY type,y,sort
 					UNION 
 					SELECT y,'balance' as type,sum(a) total,4 as sort 
 					FROM(
@@ -107,7 +107,7 @@ class ReportRepository
 						FROM (".$this->getDetailAll($user_id, $sortField).") t1
 						WHERE y='{$row->y}'
 						AND type in('".CategoryRepository::TYPE_OUT."', '".CategoryRepository::TYPE_IN."')
-						GROUP BY type,sort
+						GROUP BY type,y,sort
 					) t2
 					GROUP BY y
 					ORDER BY sort ASC";
