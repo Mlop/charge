@@ -46,10 +46,10 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
 //         return parent::render($request, $exception);
-		if ($exception instanceof ValidationException) {
-           $msg = $this->handleValidationException($exception);
-           return response(['code' => 1, 'msg' => $msg], 200);
-		}
+//		if ($exception instanceof ValidationException) {
+//           $msg = $this->handleValidationException($exception);
+//           return response(['code' => 1, 'msg' => $msg], 200);
+//		}
 // 		if ($exception instanceof UnauthorizedHttpException) {
 //            return response($exception->getMessage(), 401);
 // 		}

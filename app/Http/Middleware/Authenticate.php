@@ -5,6 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
+use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Manager;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Exception;
+
 class Authenticate
 {
     /**
@@ -14,15 +20,20 @@ class Authenticate
      */
     protected $auth;
 
+    protected $jwt;
+    protected $manager;
+
     /**
      * Create a new middleware instance.
      *
      * @param  \Illuminate\Contracts\Auth\Factory  $auth
      * @return void
      */
-    public function __construct(Auth $auth)
+    public function __construct(Auth $auth, JWTAuth $jwt, Manager $manager)
     {
         $this->auth = $auth;
+        $this->jwt = $jwt;
+        $this->manager = $manager;
     }
 
     /**
@@ -35,11 +46,24 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guard($guard)->guest()) {
-            return ['code'=>401, 'msg'=>'Unauthorized.'];
-//            return response('Unauthorized.', 401);
+        try {
+            if ($this->jwt->parseToken()->authenticate()) {
+                return $next($request);
+            }
+            if ($this->auth->guard($guard)->guest()) {
+                return ['code'=>401, 'msg'=>'Unauthorized.'];
+            }
+        } catch (Exception $exception) {
+            try {
+                //token过期，自动刷新token返回
+                if ($exception instanceof TokenExpiredException) {
+                    $token = $this->manager->refresh($this->jwt->getToken())->get();
+                    return ['code' => 402, 'msg' => 'refresh token', 'data' => $token];
+                }
+            } catch (TokenBlacklistedException $exception) {
+                return ['code'=>401, 'msg'=>'Unauthorized.'];
+            }
         }
-
         return $next($request);
     }
 }
