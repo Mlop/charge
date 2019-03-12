@@ -22,7 +22,7 @@ class JsonFormatter
         $response = $next($request);
 
         if($response instanceof JsonResponse) {
-            $data = $response->getOriginalContent();//dd($data);
+            $data = $response->getOriginalContent();
             if (!isset($data['code']) || !isset($data['msg'])) {
                 $ret = [
                     'code' => 0,

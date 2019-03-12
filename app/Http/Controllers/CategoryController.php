@@ -16,11 +16,13 @@ class CategoryController extends Controller
 {
     protected $catRep;
     protected $user;
+    protected $userId;
 
     public function __construct(CategoryRepository $catRep)
     {
         $this->catRep = $catRep;
         $this->user = Auth::user();
+        $this->userId = $this->user->id;
     }
 
     public function getList(Request $request)
@@ -33,10 +35,10 @@ class CategoryController extends Controller
 		$allSubTotal = count($list);
         foreach ($list as $i => $cat) {
 			$subTotal = $this->catRep->count($type, $cat->id);
-            $list[$i]['total'] = $subTotal;
+            $cat->total = $subTotal;
 			$allSubTotal += $subTotal;
 			if ($include_sub) {
-				$list[$i]['sub'] = $this->catRep->getList($type, $cat->id);
+                $cat->sub = $this->catRep->getList($type, $cat->id);
 			}
         }
 		if ($allSubTotal == 0 && $parent_id == 0) {
@@ -47,7 +49,7 @@ class CategoryController extends Controller
 	public function getFavoriteList(Request $request)
 	{
 		$type = $request->input('type', CategoryRepository::TYPE_IN);
-		return $this->catRep->getFavorite($this->user->id, $type);
+		return $this->catRep->getFavorite($this->userId, $type);
 	}
 	/**
 	添加或编辑类别
@@ -84,13 +86,20 @@ class CategoryController extends Controller
 
     public function addFavorite($id)
     {
+        $params = [
+            'category_id' => $id,
+            'user_id' => $this->userId,
+        ];
+        $isOk = $this->catRep->addFavorite($params);
+        if (!$isOk) {
+            return ['code'=>1, 'msg'=>'添加失败'];
+        }
+        return $isOk;
+	}
 
-
-//        $params = [
-//            'category_id' => $id,
-//            'is_favorite' => ,
-//            'user_id' => $this->
-//        ];
-//        $isOk = $this->catRep->addFavorite($params);
+    public function removeFavorite($id)
+    {
+        $isOk = $this->catRep->deleteFavorite($id);
+        return $isOk ? ['code'=>0, 'msg'=>'删除成功'] : ['code'=>1, 'msg'=>'删除失败'];
 	}
 }

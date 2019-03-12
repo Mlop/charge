@@ -8,6 +8,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use App\Models\CategoryFavorite;
 use DB;
 
 class CategoryRepository
@@ -37,6 +38,16 @@ class CategoryRepository
             ->get();
     }
 
+    public function addFavorite($param)
+    {
+        return CategoryFavorite::create($param);
+    }
+
+    public function deleteFavorite($id)
+    {
+        return CategoryFavorite::find($id)->delete();
+    }
+
     /**
      * 获取一级分类
      * @param string $type
@@ -44,8 +55,12 @@ class CategoryRepository
      */
     public function getList($type = self::TYPE_IN, $parent_id = 0)
     {
-        return Category::where("type", $type)
-            ->where("parent_category_id", $parent_id)
+        $sql = "SELECT *,(SELECT cf.id FROM category_favorite cf WHERE cf.category_id=c.id) AS fav_id 
+                      FROM category c 
+                      WHERE type = '{$type}'
+                      AND parent_category_id = {$parent_id}";
+        return DB::table(DB::Raw("({$sql}) t1"))
+            ->select("id","title","type","parent_category_id", DB::Raw("IFNULL(fav_id, 0)>0 as isFav"))
             ->get();
     }
 
