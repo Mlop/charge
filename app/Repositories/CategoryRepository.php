@@ -43,9 +43,9 @@ class CategoryRepository
         return CategoryFavorite::create($param);
     }
 
-    public function deleteFavorite($id)
+    public function deleteFavorite($id, $userId)
     {
-        return CategoryFavorite::find($id)->delete();
+        return CategoryFavorite::where("category_id", $id)->where("user_id", $userId)->delete();
     }
 
     /**
