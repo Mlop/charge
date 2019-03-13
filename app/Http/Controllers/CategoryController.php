@@ -99,7 +99,7 @@ class CategoryController extends Controller
 
     public function removeFavorite($id)
     {
-        $isOk = $this->catRep->deleteFavorite($id);
+        $isOk = $this->catRep->deleteFavorite($id, $this->userId);
         return $isOk ? ['code'=>0, 'msg'=>'删除成功'] : ['code'=>1, 'msg'=>'删除失败'];
 	}
 }
