@@ -40,6 +40,9 @@ class CategoryRepository
 
     public function addFavorite($param)
     {
+        if (CategoryFavorite::where($param)->exists()) {
+            return false;
+        }
         return CategoryFavorite::create($param);
     }
 

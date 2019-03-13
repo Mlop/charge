@@ -48,7 +48,6 @@ class ReportController extends Controller
 
     public function getMonthList(Request $request)
     {
-        $type = $request->input("type", "outgo");
         $ym = $request->input("date", date('Y-m'));
         return $this->reportRep->getMonthList($this->userId, $ym);
     }
