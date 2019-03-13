@@ -44,6 +44,7 @@ class AccountController extends Controller
     public function edit(Request $request, $id)
     {
         $parmas = $request->all();
+        $parmas['cash'] = $parmas['cash'] ? $parmas['cash'] : 0;
         $isOk = $this->rep->edit($id, $parmas);
         return $isOk ? ['code' => 0] : ['code' => 1, 'msg' => '该支出项不存在'];
     }
