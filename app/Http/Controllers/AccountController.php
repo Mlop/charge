@@ -31,6 +31,7 @@ class AccountController extends Controller
     {
         $data = $request->all();
         $data['user_id'] = $this->userId;
+        $data['cash'] = $data['cash'] ? $data['cash'] : 0;
         return $this->rep->create($data);
     }
 
