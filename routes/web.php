@@ -42,7 +42,12 @@ $router->group(['middleware' => ['json_formatter', 'auth:api']], function($route
         $router->get('/favorites', 'CategoryController@getFavoriteList');
 		//添加/编辑
         $router->put('/{id}', 'CategoryController@edit');
+        //删除分类
         $router->delete('/{id}', 'CategoryController@del');
+        //添加收藏分类
+        $router->post('/{id}/favorite', 'CategoryController@addFavorite');
+        //删除收藏分类
+        $router->delete('/{id}/favorite', 'CategoryController@removeFavorite');
     });
    
 	//报表
