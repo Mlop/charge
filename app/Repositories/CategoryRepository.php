@@ -31,7 +31,7 @@ class CategoryRepository
      */
     public function getFavorite($user_id, $type = self::TYPE_IN)
     {
-        return Category::select("category.*")
+        return Category::select("category.*",DB::Raw("1 as isFav"))
 			->join("category_favorite", "category.id", "=", "category_favorite.category_id")
             ->where("category.type", $type)
             ->where("category_favorite.user_id", $user_id)

@@ -32,7 +32,8 @@ class CategoryController extends Controller
 		$include_sub = $request->input('include_sub', false);
         $list = $this->catRep->getList($type, $parent_id);
 
-		$allSubTotal = count($list);
+        //孙类别数量
+		$allSubTotal = 0;
         foreach ($list as $i => $cat) {
 			$subTotal = $this->catRep->count($type, $cat->id);
             $cat->total = $subTotal;
@@ -41,10 +42,18 @@ class CategoryController extends Controller
                 $cat->sub = $this->catRep->getList($type, $cat->id);
 			}
         }
-		if ($allSubTotal == 0 && $parent_id == 0) {
-			return [["id"=>0, "title"=>"常用", "sub"=>$list]];
+        $cats = $list->toArray();
+		if ($include_sub) {
+		    if ($allSubTotal == 0 && $parent_id == 0) {
+                $cats = [["id" => 0, "title" => "常用", "type" => $type, "sub" => $list]];
+            }
+            $favorites = $this->catRep->getFavorite($this->userId, $type);
+            if (count($favorites) > 0) {
+                array_unshift($cats, ["id"=>0, "title"=>"收藏", "type"=>$type, "sub"=>$favorites]);
+            }
 		}
-        return $list;
+
+        return $cats;
     }
 	public function getFavoriteList(Request $request)
 	{
