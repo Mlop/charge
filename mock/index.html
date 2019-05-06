@@ -1,0 +1,24 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"> </script>
+    <script type="text/javascript" src="http://mockjs.com/dist/mock.js"></script>
+    <!-- 1. 首页 -->
+    <!--<script type="text/javascript" src="./index.js"></script>-->
+    <!-- 2. 案件搜索列表 -->
+    <script type="text/javascript" src="./caseList.js"></script>
+</head>
+<body>
+<script>
+    $.ajax({
+        url: 'http://test.com',
+        type: 'get',
+        dataType: 'json',
+    }).done(function(data, status, xhr) {
+        console.log(JSON.stringify(data, null, 4));
+    });
+</script>
+mock module data
+</body>
+</html>
