@@ -15,7 +15,7 @@ Mock.mock('http://test.com', {
             "cycle":"@integer(60, 100)",//办案周期
             "duration":"@integer(1, 10)",//合作周期
             "total":"@integer(150, 400)",//合作案件总数
-            "price":"$@float(2000, 10000)",//价格
+            "price":"￥@float(2000, 10000)",//价格
         }
     ],
     //3. 合作企业

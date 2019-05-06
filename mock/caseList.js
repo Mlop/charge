@@ -1,5 +1,4 @@
 // 案件搜索列表
-var images = ['http://test.com/a.png','http://test.com/b.png','http://test.com/c.png'];
 Mock.mock('http://test.com', {
     //1. 过滤条件
     "filter": {
@@ -36,7 +35,7 @@ Mock.mock('http://test.com', {
             "cycle": "@integer(60, 100)",//办案周期
             "duration": "@integer(1, 10)",//合作周期
             "total": "@integer(150, 400)",//合作案件总数
-            "cover|1": images//封面图片
+            "cover|1": ['http://test.com/a.png','http://test.com/b.png','http://test.com/c.png']//封面图片
         }],
         "pagination": {//分页
             "total_page": "@integer(1, 10)",//总页数
