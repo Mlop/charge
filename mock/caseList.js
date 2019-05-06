@@ -2,6 +2,7 @@
 Mock.mock('http://test.com', {
     //1. 过滤条件
     "filter": {
+        //可选择在城市
         "cities|9":[
             {
                 "id":"@natural(60, 100)",
@@ -10,7 +11,7 @@ Mock.mock('http://test.com', {
                     "id":"@natural(60, 100)",
                     "title":"@county"
                 }]
-            }],//可选择在城市
+            }],
         "selected":[],//选中的城市
         "types|10":[{
             "id":"@natural(60, 100)",
