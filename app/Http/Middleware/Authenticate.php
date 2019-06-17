@@ -61,7 +61,8 @@ class Authenticate
 //                    return ['code' => 402, 'msg' => 'refresh token', 'data' => $token];
                     return $next($request)->header('Authorization', "Bearer {$token}");
                 }
-            } catch (TokenBlacklistedException $exception) {
+            } catch (\Exception $exception) {
+            //catch (TokenBlacklistedException $exception) {
                 return ['code'=>401, 'msg'=>'Unauthorized.'];
             }
         }
