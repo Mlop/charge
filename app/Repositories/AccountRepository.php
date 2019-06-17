@@ -8,6 +8,7 @@
 namespace App\Repositories;
 
 use App\Models\Account;
+use Carbon\Carbon;
 
 class AccountRepository
 {
@@ -22,6 +23,7 @@ class AccountRepository
     }
     public function create($data)
     {
+        $data['record_at'] = $data['record_at'] ?? Carbon::now();
         return Account::create($data);
     }
 
