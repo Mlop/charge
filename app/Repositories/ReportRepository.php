@@ -50,7 +50,7 @@ class ReportRepository
                     ".$this->getDetailAll($user_id)."
                 )t1
 				JOIN category cat ON t1.category_id=cat.id
-				ORDER BY record_at DESC
+				ORDER BY record_at DESC,t1.id DESC
 				LIMIT {$top}";
         return DB::select($sql);
     }
