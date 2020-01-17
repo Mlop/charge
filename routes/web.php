@@ -1,10 +1,12 @@
 <?php
 $router->get('/', function () use ($router) {
+    return 'charge '.$router->app->version();
+});
+//发布代码钩子
+$router->post('/deploy', function () use ($router) {
     system("cd /opt/www/charge;git pull origin master;pwd", $status);
     echo '<br />';
     echo 'git pull finished';
-    echo '<br />';
-    return 'charge '.$router->app->version();
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
