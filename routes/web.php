@@ -7,6 +7,7 @@ $router->post('/deploy', function () use ($router) {
     system("cd /opt/www/charge;git pull origin master;pwd", $status);
     echo '<br />';
     echo 'git pull finished';
+    echo '1111';
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
