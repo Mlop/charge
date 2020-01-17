@@ -21,7 +21,7 @@ class BookController extends Controller
     {
         $this->bookRep = $bookRep;
         $user = Auth::user();
-        $this->userId = $user->id;
+        $this->userId = $user ? $user->id : 0;
     }
 	/**
 	添加或编辑
