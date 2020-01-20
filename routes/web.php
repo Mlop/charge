@@ -4,7 +4,7 @@ $router->get('/', function () use ($router) {
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-    exec("deploy.sh", $result, $status);
+    exec("/opt/www/charge/public/deploy.sh", $result, $status);
     var_dump($result,$status);
 //    shell_exec("deploy.sh");
 //    system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
