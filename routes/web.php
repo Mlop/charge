@@ -4,7 +4,10 @@ $router->get('/', function () use ($router) {
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-    system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
+    exec("deploy.sh", $result, $status);
+    var_dump($result,$status);
+//    shell_exec("deploy.sh");
+//    system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
