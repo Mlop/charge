@@ -1,10 +1,12 @@
 <?php
 $router->get('/', function () use ($router) {
+//    system("deploy.sh");
     return 'charge '.$router->app->version();
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-    system("cd /opt/www/charge;git pull origin master;git log -1;", $status);
+    system("deploy.sh");
+//    system("cd /opt/www/charge;git pull origin master;git log -1;", $status);
     echo '<br />';
     echo 'git pull finished';
     echo '11112';
