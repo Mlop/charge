@@ -31,6 +31,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        echo 'test 1';
         $account = $request->input('account');
         $password = $request->input('password');
         //默认使用邮箱登录
