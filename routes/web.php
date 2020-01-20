@@ -1,19 +1,10 @@
 <?php
 $router->get('/', function () use ($router) {
-//    system("deploy.sh");
     return 'charge '.$router->app->version();
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-//    system("deploy.sh");
-//    shell_exec("cd /opt/www/charge && git pull origin master && git log -1 2>&1");
     system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
-//    var_dump($status);
-    echo 'git pull finished';
-    echo ' 44';
-});
-$router->get('/vera', function() use($router) {
-    return 'vera new api 1';
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
