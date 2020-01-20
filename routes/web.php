@@ -5,9 +5,9 @@ $router->get('/', function () use ($router) {
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-    system("deploy.sh");
+//    system("deploy.sh");
 //    shell_exec("cd /opt/www/charge && git pull origin master && git log -1 2>&1");
-//    system("cd /opt/www/charge;git pull origin master;git log -1;", $status);
+    system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
 //    var_dump($status);
     echo 'git pull finished';
     echo ' 44';
