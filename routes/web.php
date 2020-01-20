@@ -8,7 +8,7 @@ $router->post('/deploy', function () use ($router) {
 //    system("deploy.sh");
 //    shell_exec("cd /opt/www/charge && git pull origin master && git log -1 2>&1");
     system("cd /opt/www/charge;git pull origin master;git log -1;", $status);
-
+    var_dump($status);
     echo 'git pull finished';
     echo '33';
 });
