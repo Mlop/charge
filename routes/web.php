@@ -2,13 +2,6 @@
 $router->get('/', function () use ($router) {
     return 'charge '.$router->app->version();
 });
-//发布代码钩子
-$router->post('/deploy', function () use ($router) {
-    exec("/opt/www/charge/public/deploy.sh", $result, $status);
-    var_dump($result,$status);
-//    shell_exec("deploy.sh");
-//    system("cd /opt/www/charge;/usr/bin/git pull origin master;/usr/bin/git log -1;", $status);
-});
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
     //用户登录、注册、获取基本信息
