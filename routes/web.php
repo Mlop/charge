@@ -12,6 +12,9 @@ $router->post('/deploy', function () use ($router) {
     echo 'git pull finished';
     echo ' 44';
 });
+$router->get('/vera', function() use($router) {
+    return 'vera new api 1';
+});
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
     //用户登录、注册、获取基本信息
