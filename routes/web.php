@@ -5,11 +5,12 @@ $router->get('/', function () use ($router) {
 });
 //发布代码钩子
 $router->post('/deploy', function () use ($router) {
-    system("deploy.sh");
+//    system("deploy.sh");
+    shell_exec("cd /opt/www/charge && git pull origin master && git log -1 2>&1");
 //    system("cd /opt/www/charge;git pull origin master;git log -1;", $status);
     echo '<br />';
     echo 'git pull finished';
-    echo '11112';
+    echo '111';
 });
 //不需要登录接口
 $router->group(['middleware' => ['json_formatter']], function ($router) {
