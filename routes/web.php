@@ -14,6 +14,7 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
     $router->group(['middleware' => ['auth:api']], function($router) {
         //用户信息
         $router->get('/user', 'UserController@getUser');
+        //账本增删改
         $router->group(['prefix'=>'book'], function ($router){
             //添加编辑账本
             $router->put('/{id}', 'BookController@edit');
@@ -22,6 +23,19 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         });
         //账本列表
         $router->get('/books', 'BookController@getList');
+        //条目增删改
+        $router->group(['prefix'=>'item'], function ($router){
+            //添加编辑账本
+            $router->put('/{id}', 'ItemController@edit');
+            //删除
+            $router->delete('/{id}', 'ItemController@delete');
+        });
+        $router->get('/items', 'ItemController@getList');
+        //账本记录的列
+        $router->group(['prefix' => 'bookitem'], function ($router) {
+            $router->get('/', 'BookItemController@getList');
+            $router->put('/{id}/check', 'BookItemController@checkItems');
+        });
         //帐目
         $router->group(['prefix'=>'account'], function ($router){
             //添加
