@@ -107,5 +107,6 @@ class BookItemController extends Controller
             $isOk = $this->bookRep->deleteByParams($params);
             return $isOk ? ['code'=>0, 'msg'=>'取消成功'] : ['code'=>1, 'msg'=>'取消失败'];
         }
+        return ['code'=>0, 'msg'=>'操作成功'];
 	}
 }
