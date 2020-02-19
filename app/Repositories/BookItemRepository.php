@@ -37,6 +37,11 @@ class BookItemRepository
             ->get();
 	}
 
+    /**
+     * 获取未被选中的列项
+     * @param $book_id
+     * @return mixed
+     */
     public function getNotSelectedItems($book_id)
     {
         $sql = "select id,title from item where id not in(select item_id from book_item where book_id=:book_id)";
