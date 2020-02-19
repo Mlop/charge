@@ -26,6 +26,7 @@ class JsonFormatter
             if (!isset($data['code']) || !isset($data['msg'])) {
                 $ret = [
                     'code' => 0,
+                    'data' => [],
                     'msg' => 'ok'
                 ];
                 if (!empty($data)) {
@@ -38,6 +39,7 @@ class JsonFormatter
             if (!isset($data['code'])) {
                 $ret = [
                     'code' => 0,
+                    'data' => [],
                     'msg' => 'ok'
                 ];
                 if (isset($data['pagination'])) {
