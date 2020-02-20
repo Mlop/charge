@@ -26,11 +26,13 @@ class ItemController extends Controller
 	public function edit(Request $request, $id)
 	{
 		$title = $request->input("title");
+		$valueType = $request->input("value_type", 0);
 
 		//创建
 		if ($id == 0) {
 			$params = [
 				"title" => $title,
+                "value_type" => $valueType,
 			];
 			$isExists = $this->itemRep->exists($params);
 			if ($isExists) {
@@ -40,6 +42,7 @@ class ItemController extends Controller
 		} else {//编辑
 			$params = [
 				"title" => $title,
+                "value_type" => $valueType,
 			];
 			
 			$isOk = $this->itemRep->edit($id, $params);
@@ -61,7 +64,7 @@ class ItemController extends Controller
 		$list = $this->itemRep->getList();
 		$data = [];
 		foreach ($list as $item) {
-		    $data[] = ['value' => (string)$item['id'], 'name' => $item['title'], 'checked' => true];
+		    $data[] = ['value' => (string)$item['id'], 'name' => $item['title'], 'checked' => true, 'value_type' => $item['value_type']];
         }
         return $data;
 	}

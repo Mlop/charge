@@ -33,7 +33,7 @@ class BookItemRepository
 	{
 		return BookItem::join("item", "book_item.item_id", "item.id")
             ->where("book_id", $book_id)
-            ->select("item.id", "item.title")
+            ->select("item.id", "item.title", "item.value_type")
             ->get();
 	}
 

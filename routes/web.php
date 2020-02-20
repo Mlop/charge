@@ -20,6 +20,10 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
             $router->put('/{id}', 'BookController@edit');
             //删除
             $router->delete('/{id}', 'BookController@delete');
+            //账本记录的列
+            $router->get('/{id}/items', 'BookController@getItemList');
+            //勾选/取消选项
+            $router->put('/{id}/checkitem', 'BookController@checkItems');
         });
         //账本列表
         $router->get('/books', 'BookController@getList');
@@ -31,11 +35,6 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
             $router->delete('/{id}', 'ItemController@delete');
         });
         $router->get('/items', 'ItemController@getList');
-        //账本记录的列
-        $router->group(['prefix' => 'bookitem'], function ($router) {
-            $router->get('/', 'BookItemController@getList');
-            $router->put('/{id}/check', 'BookItemController@checkItems');
-        });
         //帐目
         $router->group(['prefix'=>'account'], function ($router){
             //添加
