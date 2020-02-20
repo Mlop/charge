@@ -49,6 +49,7 @@ class ItemController extends Controller
 			return $isOk ? ['code'=>0, 'msg'=>'修改成功'] : ['code'=>1, 'msg'=>'修改失败'];
 		}
 	}
+	
 	public function delete($id)
 	{
 		$isOk = $this->itemRep->delete($id);
