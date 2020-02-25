@@ -44,7 +44,7 @@ class BookItemRepository
      */
     public function getNotSelectedItems($book_id)
     {
-        $sql = "select id,title from item where id not in(select item_id from book_item where book_id=:book_id)";
+        $sql = "select id,title,value_type from item where id not in(select item_id from book_item where book_id=:book_id)";
         $result = DB::select($sql, [":book_id"=>$book_id]);
 
         return json_decode(json_encode($result), true);

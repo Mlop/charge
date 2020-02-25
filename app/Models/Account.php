@@ -8,6 +8,6 @@ class Account extends Model
 {
     protected $table = 'account';
     protected $fillable = [
-        'remark', 'user_id', 'book_id', 'cash', 'category_id', 'record_at', 'type'
+        'remark', 'user_id', 'book_id', 'cash', 'category_id', 'record_at', 'type', 'items', 'contact'
     ];
 }

@@ -1,31 +1,29 @@
 <?php
 /**
- * 帐目数据与业务中间层
+ * 账目联系人
  * User: Vera
- * Date: 2019/2/27
+ * Date: 2020/2/22
  * Time: 9:51
  */
 namespace App\Repositories;
 
-use App\Models\Account;
-use App\Models\AccountItem;
+use App\Models\Contact;
 use Carbon\Carbon;
 
-class AccountRepository
+class ContactRepository
 {
     public function exists($data)
     {
-        return Account::where($data)->exists();
+        return Contact::where($data)->exists();
     }
 
     public function get($id)
     {
-        return Account::find($id);
+        return Contact::find($id);
     }
     public function create($data)
     {
-        $data['record_at'] = $data['record_at'] ?? Carbon::now();
-        return Account::create($data);
+        return Contact::create($data);
     }
 
     public function delete($id)
@@ -44,11 +42,18 @@ class AccountRepository
 
     public function builder($cond)
     {
-        return Account::where($cond);
+        return Contact::where($cond);
     }
 
-    public function createItems($data)
+    /**
+     * 创建不存在的用户名称，存在则跳过
+     * @param $data
+     */
+    public function createNotExists($data)
     {
-        return AccountItem::create($data);
+        if (!$this->exists($data)) {
+            return $this->create($data);
+        }
+        return false;
     }
 }

@@ -12,6 +12,7 @@ use App\Repositories\BookItemRepository;
 use Illuminate\Http\Request;
 use App\Repositories\BookRepository;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 
 class BookController extends Controller
 {
@@ -60,7 +61,12 @@ class BookController extends Controller
 	}
 	public function getList()
 	{
-		return $this->bookRep->getList($this->userId);
+        $list = json_decode(Redis::get("books_".$this->userId));
+	    if (!$list) {
+            $list = $this->bookRep->getList($this->userId);
+            Redis::setex("books_".$this->userId, 7200, $list);
+        }
+		return $list;
 	}
     /**
      * 复选框列表数据
@@ -70,7 +76,7 @@ class BookController extends Controller
     {
         $isIncludeUncheck = $request->get('is_include_uncheck', 1);
         $defaultConfig = ['', '0.00', '0'];
-        $list = $this->bookItemRep->getList($book_id);
+        $list = $this->bookItemRep->getList($book_id)->toArray();
         $data = [];
         foreach ($list as $item) {
             $data[] = ['value' => (string)$item['id'], 'name' => $item['title'], 'checked' => true, 'value_type'=>$item['value_type'], 'default_value'=>$defaultConfig[$item['value_type']]];

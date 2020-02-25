@@ -71,5 +71,7 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         //年度top2账单
         $router->get('/yearly', 'ReportController@getYearSummary');
     });
+    //公共数据
+    $router->get('/contacts', 'CommonController@contactList');
 });
 
