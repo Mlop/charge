@@ -51,4 +51,28 @@ class AccountRepository
     {
         return AccountItem::create($data);
     }
+
+    /**
+     * 根据条件搜索结果，返回分页数据
+     * @param $params
+     * @return mixed
+     */
+    public function search($params)
+    {
+        extract($params);
+        $builder = Account::join("book as b", "account.book_id", "=", "b.id")->select("account.type", "b.title");
+        if (isset($year) && $year) {
+            $builder = $builder
+                ->whereRaw("DATE_FORMAT(created_at,'%Y')", $params['year']);
+        }
+        if (isset($book) && $book) {
+            $builder = $builder
+                ->where("account.book_id", $book);
+        }
+        if (isset($contact) && $contact) {
+            $builder = $builder->where("contact", $contact);
+        }
+        $data = $builder->get();
+        return $data;
+    }
 }

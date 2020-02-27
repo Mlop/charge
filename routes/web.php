@@ -62,7 +62,7 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
             $router->delete('/{id}/favorite', 'CategoryController@removeFavorite');
         });
 
-        //报表
+        //个人报表 开始 ------------------------------------
         $router->get('/report', 'ReportController@index');
         //按月概要
         $router->get('/summary', 'ReportController@getSummaryList');
@@ -70,6 +70,12 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         $router->get('/monthly', 'ReportController@getMonthList');
         //年度top2账单
         $router->get('/yearly', 'ReportController@getYearSummary');
+        //个人报表 结束 ------------------------------------
+        //统计 开始 ------------------------------------
+        $router->get('/stat', 'StatController@index');
+        $router->get('/stat/filters', 'StatController@filters');
+        $router->get('/stat/list', 'StatController@lists');
+        //统计 结束 ------------------------------------
     });
     //公共数据
     $router->get('/contacts', 'CommonController@contactList');
