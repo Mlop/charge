@@ -12,7 +12,6 @@ use App\Repositories\BookItemRepository;
 use Illuminate\Http\Request;
 use App\Repositories\BookRepository;
 use Auth;
-use Illuminate\Support\Facades\Redis;
 
 class BookController extends Controller
 {
@@ -61,12 +60,7 @@ class BookController extends Controller
 	}
 	public function getList()
 	{
-        $list = json_decode(Redis::get("books_".$this->userId));
-	    if (!$list) {
-            $list = $this->bookRep->getList($this->userId);
-            Redis::setex("books_".$this->userId, 7200, $list);
-        }
-		return $list;
+        return $this->bookRep->getList($this->userId);
 	}
     /**
      * 复选框列表数据
