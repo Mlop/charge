@@ -1,5 +1,5 @@
 .gitignore
-/vendor
+/vendor/*
 /.idea
 Homestead.json
 Homestead.yaml
