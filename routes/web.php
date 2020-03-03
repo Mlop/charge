@@ -75,6 +75,7 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         $router->get('/stat', 'StatController@index');
         $router->get('/stat/filters', 'StatController@filters');
         $router->get('/stat/list', 'StatController@lists');
+        $router->get('/stat/list/detail', 'StatController@listDetail');
         //统计 结束 ------------------------------------
     });
     //公共数据
