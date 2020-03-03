@@ -8,6 +8,7 @@
 namespace App\Repositories;
 
 use App\Models\Book;
+use App\Models\Account;
 use Illuminate\Support\Facades\Redis;
 use DB;
 
@@ -71,12 +72,15 @@ class BookRepository
 	}
 
     /**
-     * 账本创建年份(筛选条件的年份)
+     * 账目创建年份(筛选条件的年份)
      * @return mixed
      */
     public function getFilterYears($user_id)
     {
-        $years = Book::selectRaw(DB::Raw("DATE_FORMAT(created_at,'%Y') as create_year"))->where("user_id", $user_id)->get();
+        $years = Account::select(DB::Raw("DATE_FORMAT(created_at,'%Y') as create_year"))
+            ->where("user_id", $user_id)
+            ->groupBy("create_year")
+            ->get();
         $data[] = [
             "title" => "不限",
             "value" => ""
@@ -88,5 +92,14 @@ class BookRepository
             ];
         }
         return $data;
+	}
+
+    /**
+     * 清除缓存账本列表的缓存
+     * @param $user_id
+     */
+    public function clearBooksCache($user_id)
+    {
+        Redis::del("books_".$user_id);
 	}
 }

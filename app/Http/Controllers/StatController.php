@@ -39,7 +39,7 @@ class StatController extends Controller
     public function filters()
     {
         //年份
-        $data['book_years'] = $this->bookRep->getFilterYears($this->userId);
+        $data['years'] = $this->bookRep->getFilterYears($this->userId);
         //账本
         $data['books'] = $this->bookRep->getFilterList($this->userId);
         //a-z姓名
@@ -56,13 +56,18 @@ class StatController extends Controller
      * contact
      * page
      * page_size
+     * contact times, totalCash,=>*[cash(item)],*book,*created_at,
      */
     public function lists(Request $request)
     {
         $params = $request->all();
-//        $year = $request->get('year', '');
-//        $book = $request->get('book', '');
-//        $contact = $request->get('contact', '');
-        return $this->accountRep->search($params);
+        $summary = $this->accountRep->statByContact($params);
+        return $summary;
+    }
+
+    public function listDetail(Request $request)
+    {
+        $params = $request->all();
+        return $this->accountRep->searchDetail($params);
     }
 }

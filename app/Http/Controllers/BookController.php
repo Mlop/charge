@@ -43,13 +43,20 @@ class BookController extends Controller
 			if ($isExists) {
 			    return ['code'=>1, 'msg'=>'该账本已经存在'];
 			}
-			return $this->bookRep->add($params);
+			$isOk = $this->bookRep->add($params);
+			if ($isOk) {
+                $this->bookRep->clearBooksCache($this->userId);
+            }
+            return $isOk ? ['code'=>0, 'msg'=>'添加成功'] : ['code'=>1, 'msg'=>'添加失败'];
 		} else {//编辑
 			$params = [
 				"title" => $title,
 			];
 			
 			$isOk = $this->bookRep->edit($id, $params);
+            if ($isOk) {
+                $this->bookRep->clearBooksCache($this->userId);
+            }
 			return $isOk ? ['code'=>0, 'msg'=>'修改成功'] : ['code'=>1, 'msg'=>'修改失败'];
 		}
 	}

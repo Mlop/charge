@@ -9,7 +9,9 @@ namespace App\Repositories;
 
 use App\Models\Account;
 use App\Models\AccountItem;
+use App\Models\Item;
 use Carbon\Carbon;
+use DB;
 
 class AccountRepository
 {
@@ -53,14 +55,76 @@ class AccountRepository
     }
 
     /**
-     * 根据条件搜索结果，返回分页数据
+     * 根据姓名统计数量
+     */
+    public function statByContact($params)
+    {
+        $cond = [];
+        if (isset($params['book']) && $params['book']) {
+            $cond['book_id'] = $params['book'];
+        }
+        if (isset($params['year']) && $params['year']) {
+            $cond['year'] = $params['year'];
+        }
+        $query = Account::select("contact",DB::Raw("count(1) as totalTimes"))
+            ->groupBy("contact");
+        if (isset($cond['year']) && $cond['year']) {
+            $query = $query->whereRaw("DATE_FORMAT(account.created_at, '%Y')=".$cond['year']);
+            unset($cond['year']);
+        }
+        $data = $query->where($cond)->get();
+        $result = [];
+        foreach ($data as $item) {
+            $cond['a.contact'] = $item['contact'];
+            $item['items'] = $this->statItems($cond);
+            $result[] = $item;
+        }
+        return $result;
+    }
+
+    /**
+     * 按项目标题统计值之和
+     * @param array $params
+     * @return mixed
+     */
+    public function statItems($params = [])
+    {
+        $query = Item::join("account_item as ai", "item.id", "=", "ai.item_id")
+            ->join("account as a", "a.id", "=", "ai.account_id")
+            ->select("title",DB::Raw("sum(item_value) as totalValue"),"a.type")
+            ->groupBy("a.type","item.title");
+        if (isset($params['year']) && $params['year']) {
+            $query = $query->whereRaw("DATE_FORMAT(a.created_at, '%Y')=".$params['year']);
+            unset($params['year']);
+        }
+        $query = $query->where($params);
+        return $query->get();
+    }
+
+    /**
+     * 获取条目详情
+     * @param array $params
+     * @return mixed
+     */
+    public function getItemsDetail($params = [])
+    {
+        $query = Item::join("account_item as ai", "item.id", "=", "ai.item_id")
+            ->join("account as a", "a.id", "=", "ai.account_id")
+            ->select("title", "item_value", "value_type");
+        $query = $query->where($params);
+        return $query->get();
+    }
+    /**
+     * 根据条件搜索结果详细，返回分页数据
      * @param $params
      * @return mixed
      */
-    public function search($params)
+    public function searchDetail($params)
     {
         extract($params);
-        $builder = Account::join("book as b", "account.book_id", "=", "b.id")->select("account.type", "b.title");
+        $builder = Account::join("book as b", "account.book_id", "=", "b.id")
+//            ->join("account_item ai", "account.id", "=", "ai.account_id")
+            ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.created_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
         if (isset($year) && $year) {
             $builder = $builder
                 ->whereRaw("DATE_FORMAT(created_at,'%Y')", $params['year']);
@@ -73,6 +137,13 @@ class AccountRepository
             $builder = $builder->where("contact", $contact);
         }
         $data = $builder->get();
-        return $data;
+        $result = [];
+        foreach ($data as $item) {
+            $items = $this->getItemsDetail(["ai.account_id"=>$item['id']]);
+            $item['items'] = $items;
+            $result[] = $item;
+        }
+
+        return $result;
     }
 }
