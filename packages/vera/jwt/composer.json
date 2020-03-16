@@ -1,0 +1,16 @@
+{
+    "name": "vera/jwt-auth",
+    "description": "JSON Web Token Authentication for  Lumen",
+    "authors": [
+        {
+          "name": "vera",
+          "email": "vera0228@sohu.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Vera\\JWT\\": "src/"
+        }
+    }
+}
