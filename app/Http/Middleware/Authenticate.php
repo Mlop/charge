@@ -58,8 +58,8 @@ class Authenticate
                 //token过期，自动刷新token返回数据
                 if ($exception instanceof TokenExpiredException) {
                     $token = $this->manager->refresh($this->jwt->getToken())->get();
-//                    return ['code' => 402, 'msg' => 'refresh token', 'data' => $token];
-                    return $next($request)->header('Authorization', "Bearer {$token}");
+                    return ['code' => 402, 'msg' => 'refresh token', 'data' => $token];
+//                    return $next($request)->header('Authorization', "Bearer {$token}");
                 }
             } catch (\Exception $exception) {
             //catch (TokenBlacklistedException $exception) {
