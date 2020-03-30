@@ -37,8 +37,8 @@ class RefreshToken
         //刷新token,获得新token
         $newToken = $this->auth->guard()->refreshToken();
 
+        $request->headers->set('Authorization', 'Bearer ' . $newToken);
         $response = $next($request);
-
         if ($newToken) {
             $response->headers->set('Authorization', 'Bearer ' . $newToken);
         }

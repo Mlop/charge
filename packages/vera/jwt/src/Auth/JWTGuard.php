@@ -242,7 +242,6 @@ class JWTGuard implements Guard
     public function validate(array $credentials = [])
     {
         $user = $this->provider->retrieveByCredentials($credentials);
-//var_dump($user, $credentials);exit;
         return $user ? $this->provider->validateCredentials($user, $credentials) : false;
     }
 
@@ -275,6 +274,7 @@ class JWTGuard implements Guard
         /** @var IClaimProvider $user */
         $token = $this->newToken($user);
         if ($token) {
+            $this->setUser($user);
             return $token;
         }
         return false;
