@@ -7,12 +7,12 @@ namespace App\Http\Controllers;
 
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-//use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\JWTAuth;
 use Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Events\RegisterEvent;
-use Vera\JWT\Exception\TokenInvalidException;
+//use Vera\JWT\Exception\TokenInvalidException;
 
 class UserController extends Controller
 {
@@ -24,42 +24,33 @@ class UserController extends Controller
     protected $jwt;
     protected $userRep;
 
-//    public function testGetSecretKey()
+//    public function __construct(UserRepository $userRep)
 //    {
-//        $this->assertEquals(config('jwt.secret_key'), \Vera\JWT\Util\ConfigUtil::getSecretKey());
-//    }
-    public function __construct(UserRepository $userRep)
-    {
-        $this->userRep = $userRep;
-    }
-//    public function __construct(JWTAuth $jwt, UserRepository $userRep)
-//    {
-//        $this->jwt = $jwt;
 //        $this->userRep = $userRep;
 //    }
-
-    public function login(Request $request)
+    public function __construct(JWTAuth $jwt, UserRepository $userRep)
     {
-        //从请求取出证书,也就是邮件密码
-//        $token = Auth::refreshToken();
-//        if (!$token) {
-//            throw new TokenInvalidException("refresh failed");
-//        }
-
-//        return response()->json(['token' => $token]);
-        //从请求取出证书,也就是邮件密码
-        $credentials = $request->only('name', 'password');
-        $token = Auth::attempt($credentials);
-        $obj = Auth::user();
-//        $token = Auth::newToken($user);
-//        return response()->json(['token' => $token]);
-
-        return response()->json(['token' => $token,'user'=>$obj]);
+        $this->jwt = $jwt;
+        $this->userRep = $userRep;
     }
 
-    public function test()
+//    public function login(Request $request)
+//    {
+//        //从请求取出证书,也就是邮件密码
+//        $credentials = $request->only('name', 'password');
+//        $token = Auth::attempt($credentials);
+//        $user = Auth::user();
+//        $user->token = $token;
+//        return [
+//            'id' => $user->id,
+//            'name'=>$user->name,
+//            'token'=>$token
+//        ];
+//    }
+
+    public function test(Request $request)
     {
-        $token = Auth::refreshToken();var_dump($token);exit;
+        $token = Auth::getToken();
         if (!$token) {
             throw new TokenInvalidException("refresh failed");
         }
@@ -68,25 +59,25 @@ class UserController extends Controller
         return response()->json(['user' => $obj]);
     }
 
-//    public function login(Request $request)
-//    {
-//        $account = $request->input('account');
-//        $password = $request->input('password');
-//        //默认使用邮箱登录
-//        $key = "email";
-//        //手机号登录
-//        if (preg_match('/^\d+$/', $account)) {
-//            $key = "phone";
-//        }
-//        if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
-//			if (!$token = $this->jwt->attempt(["name"=>$account, "password"=>$password])) {
-//				return ['code' => 404, 'msg' => 'user_not_found'];
-//			}
-//        }
-//		$user = Auth::user();
-//		$user->token = $token;
-//        return $user;
-//    }
+    public function login(Request $request)
+    {
+        $account = $request->input('account');
+        $password = $request->input('password');
+        //默认使用邮箱登录
+        $key = "email";
+        //手机号登录
+        if (preg_match('/^\d+$/', $account)) {
+            $key = "phone";
+        }
+        if (!$token = $this->jwt->attempt([$key=>$account, "password"=>$password])) {
+			if (!$token = $this->jwt->attempt(["name"=>$account, "password"=>$password])) {
+				return ['code' => 404, 'msg' => 'user_not_found'];
+			}
+        }
+		$user = Auth::user();
+		$user->token = $token;
+        return $user;
+    }
 
     public function register(Request $request)
     {

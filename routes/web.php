@@ -1,20 +1,10 @@
 <?php
 $router->get('/', function () use ($router) {
     return 'charge '.$router->app->version();
-//    return config('jwt');
-    //    public function testGetSecretKey()
-//    {
-//        $this->assertEquals(config('jwt.secret_key'), \Lsxiao\JWT\Util\ConfigUtil::getSecretKey());
-//    }
 });
-//$app->get('/posts', ['middleware' => ['jwt.auth','jwt.refresh'], 'uses' => 'PostController@index']);
-$router->get('/test', 'CustomerController@login');
-//$router->get('/test', ['middleware' => ['jwt.auth'], 'uses' => 'CustomerController@login']);,'jwt.refresh'
-$router->group(['middleware' => ['jwt.auth']], function ($router) {
-    $router->get('/test-auth', 'UserController@test');
-});
+
 //不需要登录接口
-$router->group(['middleware' => []], function ($router) {//'json_formatter'
+$router->group(['middleware' => ['json_formatter']], function ($router) {
     //用户登录、注册、获取基本信息
     $router->post('/login', 'UserController@login');
     $router->post('/register', 'UserController@register');
