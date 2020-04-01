@@ -32,7 +32,7 @@ class BookController extends Controller
 	public function edit(Request $request, $id)
 	{
 		$title = $request->input("title");
-		
+
 		//创建
 		if ($id == 0) {
 			$params = [
@@ -52,7 +52,7 @@ class BookController extends Controller
 			$params = [
 				"title" => $title,
 			];
-			
+
 			$isOk = $this->bookRep->edit($id, $params);
             if ($isOk) {
                 $this->bookRep->clearBooksCache($this->userId);
@@ -76,7 +76,7 @@ class BookController extends Controller
     public function getItemList(Request $request, $book_id)
     {
         $isIncludeUncheck = $request->get('is_include_uncheck', 1);
-        $defaultConfig = ['', '0.00', '0'];
+        $defaultConfig = ['', '0.00', '0', ''];
         $list = $this->bookItemRep->getList($book_id)->toArray();
         $data = [];
         foreach ($list as $item) {
