@@ -127,7 +127,7 @@ class AccountRepository
             ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.created_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
         if (isset($year) && $year) {
             $builder = $builder
-                ->whereRaw("DATE_FORMAT(created_at,'%Y')", $params['year']);
+                ->whereRaw("DATE_FORMAT(account.created_at,'%Y')=".$params['year']);
         }
         if (isset($book) && $book) {
             $builder = $builder
