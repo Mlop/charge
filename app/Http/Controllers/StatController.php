@@ -36,14 +36,29 @@ class StatController extends Controller
     /**
      * 列表过滤条件数据，包括结果总条数(TODO 排序)
      */
-    public function filters()
+    public function filters(Request $request)
     {
-        //年份
-        $data['years'] = $this->bookRep->getFilterYears($this->userId);
-        //账本
-        $data['books'] = $this->bookRep->getFilterList($this->userId);
-        //a-z姓名
-        $data['contacts'] = $this->contactRep->getAZIndexList();
+        $field = $request->get('field', 'all');
+        switch ($field) {
+            case 'years':
+                $data = $this->bookRep->getFilterYears($this->userId);
+                break;
+            case 'books':
+                $data = $this->bookRep->getFilterList($this->userId);
+                break;
+            case 'contacts':
+                $data = $this->contactRep->getAZIndexList();
+                break;
+            default:
+                //年份
+                $data['years'] = $this->bookRep->getFilterYears($this->userId);
+                //账本
+                $data['books'] = $this->bookRep->getFilterList($this->userId);
+                //a-z姓名
+                $data['contacts'] = $this->contactRep->getAZIndexList();
+                break;
+        }
+
         //账本条目
         return $data;
     }

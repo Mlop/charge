@@ -76,7 +76,7 @@ class BookController extends Controller
     public function getItemList(Request $request, $book_id)
     {
         $isIncludeUncheck = $request->get('is_include_uncheck', 1);
-        $defaultConfig = ['', '0.00', '0', ''];
+        $defaultConfig = ['', '0.00', '0', '输入或选择姓名'];
         $list = $this->bookItemRep->getList($book_id)->toArray();
         $data = [];
         foreach ($list as $item) {

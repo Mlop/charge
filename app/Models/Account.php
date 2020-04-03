@@ -10,4 +10,9 @@ class Account extends Model
     protected $fillable = [
         'remark', 'user_id', 'book_id', 'cash', 'category_id', 'record_at', 'type', 'items', 'contact'
     ];
+    static $typeConfig = [
+        'outgo'=>'支出',
+        'income'=>'收入',
+        'loan'=>'借贷',
+    ];
 }

@@ -54,6 +54,20 @@ class AccountRepository
         return AccountItem::create($data);
     }
 
+    public function clearItems($data)
+    {
+        return AccountItem::where($data)->delete();
+    }
+
+    public function updateItem($cond, $values)
+    {
+        $item = AccountItem::where($cond);
+        if (!$item) {
+            return false;
+        }
+        return $item->update($values);
+    }
+
     /**
      * 根据姓名统计数量
      */
@@ -65,6 +79,9 @@ class AccountRepository
         }
         if (isset($params['year']) && $params['year']) {
             $cond['year'] = $params['year'];
+        }
+        if (isset($params['contact']) && $params['contact']) {
+            $cond['contact'] = $params['contact'];
         }
         $query = Account::select("contact",DB::Raw("count(1) as totalTimes"))
             ->groupBy("contact");
