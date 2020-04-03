@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Repositories\ReportRepository;
 use App\Repositories\AccountRepository;
@@ -36,8 +37,24 @@ class ReportController extends Controller
 		//本月总收入
         $totalIn =  $this->reportRep->getTotalInMonth($this->userId, 'income');
 		//最近4条收支记录
-        $items = $this->reportRep->lastestRecord($this->userId);
+        $items = $this->formatRecordItem($this->reportRep->lastestRecord($this->userId));
 		return compact('totalOut', 'totalIn', 'items');
+    }
+
+    /**
+     * 格式化单条收支记录
+     */
+    private function formatRecordItem($items)
+    {
+        foreach ($items as &$item) {
+            //备注显示顺序为：添加的备注》姓名》类型
+            $remark = $item->remark;
+            if (!$remark) {
+                $remark = $item->contact ? : Account::$typeConfig[$item->type];
+            }
+            $item->remark = $remark;
+        }
+        return $items;
     }
 
     public function getSummaryList(Request $request)
@@ -51,7 +68,7 @@ class ReportController extends Controller
         $ym = $request->input("date", date('Y-m'));
         return $this->reportRep->getMonthList($this->userId, $ym);
     }
-	
+
 	public function getYearSummary(Request $request)
 	{
 		$top = $request->input("top", 2);

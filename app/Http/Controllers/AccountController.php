@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Repositories\AccountRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ContactRepository;
@@ -39,20 +40,30 @@ class AccountController extends Controller
 
         DB::beginTransaction();
         try {
-            //保存名称到contact
-            $this->contactRep->createNotExists(['name' => $data['contact']]);
+            if (isset($data['contact']) && $data['contact']) {
+                //保存名称到contact
+                $this->contactRep->createNotExists(['name' => $data['contact']]);
+            }
             $items = $data['items'];
             $data['items'] = json_encode($items);
             //保存account
             $account = $this->rep->create($data);
             //保存items
-            foreach ($items as $item) {
+            foreach ($items as &$item) {
+                //现金
+                if ($item['value_type'] == Item::VALUE_TYPE_DECIMAL) {
+                    $item['formValue'] = $item['formValue'] ? $item['formValue'] : 0;
+                    $item['formValue'] = number_format($item['formValue'], 2, '.', '');
+
+                }
                 $this->rep->createItems([
                     'item_id' => $item['value'],
                     'account_id' => $account->id,
                     'item_value' => $item['formValue'],
                 ]);
             }
+            //@todo 格式化金额显示
+            $this->rep->edit($account->id, ['items'=>json_encode($items)]);
             DB::commit();
             return $account;
         } catch (\Exception $ex) {
@@ -70,12 +81,45 @@ class AccountController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $parmas = $request->all();
-        $parmas['cash'] = $parmas['cash'] ? $parmas['cash'] : 0;
-        $isOk = $this->rep->edit($id, $parmas);
-        return $isOk ? ['code' => 0] : ['code' => 1, 'msg' => '该支出项不存在'];
+        $params = $request->all();
+        DB::beginTransaction();
+        try {
+            $items = $params['items'];
+            //保存items
+            foreach ($items as &$item) {
+                //现金
+                if ($item['value_type'] == Item::VALUE_TYPE_DECIMAL) {
+                    $item['formValue'] = $item['formValue'] ? $item['formValue'] : 0;
+                    $item['formValue'] = number_format($item['formValue'], 2, '.', '');
+                    $params['cash'] = $item['formValue'];
+                } else if ($item['value_type'] == Item::VALUE_TYPE_COMBOX) {//姓名
+                    $params['contact'] = $item['formValue'];
+                    if ($params['contact']) {
+                        //保存名称到contact
+                        $this->contactRep->createNotExists(['name' => $params['contact']]);
+                    }
+                }
+                $this->rep->updateItem(
+                    [
+                        'item_id' => $item['value'],
+                        'account_id' => $id,
+                    ],
+                    [
+                        'item_value' => $item['formValue'],
+                    ]
+                );
+            }
+            //保存account
+            $params['items'] = json_encode($items);
+            $isOk = $this->rep->edit($id, $params);
+            DB::commit();
+            return $isOk ? ['code' => 0] : ['code' => 1, 'msg' => '该支出项不存在'];
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return ['code'=>1, 'msg'=>'save db exception.'.$ex->getMessage()];
+        }
     }
-	
+
 	public function get($id)
 	{
 		$data = $this->rep->get($id);
@@ -83,6 +127,7 @@ class AccountController extends Controller
 			return ['code'=>1, 'msg'=>'未找到'];
 		}
 		$data->category_title = $this->catRep->getField($data->category_id);
+		$data->items = json_decode($data->items, true);
 		return $data;
 	}
 }
