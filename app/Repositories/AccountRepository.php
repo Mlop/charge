@@ -12,6 +12,7 @@ use App\Models\AccountItem;
 use App\Models\Item;
 use Carbon\Carbon;
 use DB;
+use App\Facades\MyFun;
 
 class AccountRepository
 {
@@ -74,24 +75,30 @@ class AccountRepository
     public function statByContact($params)
     {
         $cond = [];
+        //账本搜索
         if (isset($params['book']) && $params['book']) {
             $cond['book_id'] = $params['book'];
         }
-        if (isset($params['year']) && $params['year']) {
-            $cond['year'] = $params['year'];
-        }
-        if (isset($params['contact']) && $params['contact']) {
-            $cond['contact'] = $params['contact'];
-        }
-        $query = Account::select("contact",DB::Raw("count(1) as totalTimes"))
+        $query = Account::select("contact",DB::Raw("count(1) as totalTimes"), DB::Raw("sum(cash) as cash"))
             ->groupBy("contact");
-        if (isset($cond['year']) && $cond['year']) {
-            $query = $query->whereRaw("DATE_FORMAT(account.created_at, '%Y')=".$cond['year']);
-            unset($cond['year']);
+        //创建年限搜索
+        if (isset($params['year']) && $params['year']) {
+            $query = $query->whereRaw("DATE_FORMAT(account.created_at, '%Y')=".$params['year']);
+        }
+        //联系人过滤
+        if (isset($params['contact']) && $params['contact']) {
+            $query = $query->whereIn('contact', explode(",", $params['contact']));
+        }
+        //排序
+        if (isset($params['sort']) && $params['sort']) {
+            list($field, $sortBy) = explode("#", $params['sort']);
+            $query = $query->orderBy($field, $sortBy);
         }
         $data = $query->where($cond)->get();
         $result = [];
         foreach ($data as $item) {
+            $item['contact'] = $item['contact'] ? : '';//个人
+            $item['cash'] = MyFun::formatCash($item['cash']);
             $cond['a.contact'] = $item['contact'];
             $item['items'] = $this->statItems($cond);
             $result[] = $item;
@@ -100,7 +107,7 @@ class AccountRepository
     }
 
     /**
-     * 按项目标题统计值之和
+     * 按项目标题统计值之和(统计类型是int和decimal的)
      * @param array $params
      * @return mixed
      */
@@ -109,6 +116,7 @@ class AccountRepository
         $query = Item::join("account_item as ai", "item.id", "=", "ai.item_id")
             ->join("account as a", "a.id", "=", "ai.account_id")
             ->select("title",DB::Raw("sum(item_value) as totalValue"),"a.type")
+            ->whereIn("item.value_type", [Item::VALUE_TYPE_INT, Item::VALUE_TYPE_DECIMAL])
             ->groupBy("a.type","item.title");
         if (isset($params['year']) && $params['year']) {
             $query = $query->whereRaw("DATE_FORMAT(a.created_at, '%Y')=".$params['year']);

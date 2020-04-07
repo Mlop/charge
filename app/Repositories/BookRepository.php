@@ -26,7 +26,7 @@ class BookRepository
 	{
 		return $this->get($id)->update($params);
 	}
-	
+
 	public function add($params)
 	{
 		return Book::create($params);
@@ -54,7 +54,7 @@ class BookRepository
     {
         $books = $this->getList($user_id);
         $data[] = [
-            "title" => "不限",
+            "title" => "账本不限",
             "value" => ""
         ];
         foreach ($books as $item) {
@@ -82,7 +82,7 @@ class BookRepository
             ->groupBy("create_year")
             ->get();
         $data[] = [
-            "title" => "不限",
+            "title" => "年份不限",
             "value" => ""
         ];
         foreach ($years as $item) {
