@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use Carbon\Carbon;
 use DB;
+use App\Facades\MyFun;
 
 class ReportRepository
 {
@@ -57,25 +58,31 @@ class ReportRepository
 
     public function getSummaryByMonth($user_id, $type)
     {
-		$sql = "SELECT ym,sum(cash) AS total
+        $pureCash = "if(acc.type='income', acc.cash, -1*acc.cash) pure_cash";
+		$sql = "SELECT ym,sum(pure_cash) AS total
 				FROM
 					(
-						".$this->getDetailAll($user_id)."
+						".$this->getDetailAll($user_id, $pureCash)."
 					) t1
 				GROUP BY ym
 				ORDER BY ym DESC";
 		$result = DB::select($sql);
 		$data = [];
 		foreach ($result as $row) {
-			$sql = "SELECT ym,sum(cash) as total,type
+			$sql = "SELECT ym,sum(pure_cash) as total,type
 					FROM
 						(
-							".$this->getDetailAll($user_id)."
+							".$this->getDetailAll($user_id, $pureCash)."
 						) t1
 					WHERE ym='".$row->ym."'
 					GROUP BY ym,type
 					ORDER BY ym DESC";
-			$row->item = DB::select($sql);
+            $item = DB::select($sql);
+			foreach ($item as &$it) {
+                $it->total = MyFun::formatCash($it->total);
+            }
+			$row->item = $item;
+			$row->total = MyFun::formatCash($row->total);
 			$data[] = $row;
 		}
 		return $data;
@@ -83,7 +90,11 @@ class ReportRepository
     public function getMonthList($user_id, $ym)
     {
 		$sql = $this->getDetaiGroup($user_id)." WHERE ym='{$ym}' ORDER BY record_at DESC";
-		return DB::select($sql);
+		$result = DB::select($sql);
+		foreach ($result as &$row) {
+		    $row->cash = MyFun::formatCash($row->cash);
+        }
+        return $result;
     }
 	public function getYearSummary($user_id, $top = 2)
 	{
@@ -92,7 +103,7 @@ class ReportRepository
 				GROUP BY y
 				ORDER BY y DESC
 				LIMIT {$top}";
-		$result = DB::select($sql);	
+		$result = DB::select($sql);
 		$sortField = "case type when 'outgo' then 1 when 'income' then 2 when 'loan' then 3 end as sort";
 		$data = [];
 		foreach ($result as $row) {

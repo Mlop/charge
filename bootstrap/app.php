@@ -80,7 +80,7 @@ $app->singleton(
 */
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 //$app->register(Vera\JWT\Provider\LumenServiceProvider::class);
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);

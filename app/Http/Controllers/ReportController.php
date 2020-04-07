@@ -69,9 +69,25 @@ class ReportController extends Controller
         return $this->reportRep->getMonthList($this->userId, $ym);
     }
 
+    /**
+     * 按年份统计
+     * @param Request $request
+     * @return array
+     */
 	public function getYearSummary(Request $request)
 	{
 		$top = $request->input("top", 2);
 		return $this->reportRep->getYearSummary($this->userId, $top);
 	}
+
+    /**
+     * 按账本统计@todo 未完成
+     * @param Request $request
+     * @return array
+     */
+    public function getBookSummary(Request $request)
+    {
+        $top = $request->input("top", 2);
+        return $this->reportRep->getYearSummary($this->userId, $top);
+    }
 }

@@ -55,7 +55,7 @@ class StatController extends Controller
                 //账本
                 $data['books'] = $this->bookRep->getFilterList($this->userId);
                 //a-z姓名
-                $data['contacts'] = $this->contactRep->getAZIndexList();
+//                $data['contacts'] = $this->contactRep->getAZIndexList();
                 break;
         }
 
