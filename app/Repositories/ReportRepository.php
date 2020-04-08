@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Account;
 use Carbon\Carbon;
 use DB;
 use App\Facades\MyFun;
@@ -126,4 +127,38 @@ class ReportRepository
 		}
 		return $data;
 	}
+
+    /**
+     * 按账本统计总额
+     */
+    public function getBookSummary($user_id, $top = 2)
+    {
+        $sql = "SELECT b.id,b.title,sum(if(a.type='".Account::TYPE_INCOME."', cash, -1*cash)) total FROM account a JOIN book b ON a.book_id=b.id
+                WHERE b.user_id={$user_id}
+                GROUP BY b.id,b.title
+                ORDER BY total DESC
+				LIMIT {$top}";
+        $result = DB::select($sql);
+        $data = [];
+        foreach ($result as $row) {
+            $row->total = MyFun::formatCash($row->total);
+            $data[] = $row;
+        }
+        return $data;
+	}
+
+    /**
+     * 某账本所有账目
+     * @param $book_id
+     * @return mixed
+     */
+    public function getBookDetail($book_id)
+    {
+        $result = Account::where("book_id", $book_id)->select("account.*",DB::Raw("(select cat.title from category as cat where cat.id=account.category_id) as cattitle"))->orderBy("created_at", "desc")->get();
+        foreach ($result as &$item) {
+            $item['items'] = json_decode($item['items']);
+            $item['created_date'] = MyFun::getDateStr($item['created_at']);
+        }
+        return $result;
+    }
 }

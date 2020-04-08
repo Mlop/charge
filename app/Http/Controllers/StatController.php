@@ -64,7 +64,7 @@ class StatController extends Controller
     }
 
     /**
-     * 列表部分数据，包括分页(TODO 排序)
+     * 列表部分数据，包括分页
      * 统计的最终结果：共有账本数量，金额总数、账本各项总数。
      * year
      * book

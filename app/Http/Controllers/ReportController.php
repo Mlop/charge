@@ -24,8 +24,8 @@ class ReportController extends Controller
 
     public function __construct(ReportRepository $reportRep, AccountRepository $accountRep)
     {
-        $user = Auth::user();
-        $this->userId = $user->id;
+        $user = $this->getUser();
+        $this->userId = $user ? $user->id : 0;
         $this->reportRep = $reportRep;
         $this->accountRep = $accountRep;
     }
@@ -81,13 +81,23 @@ class ReportController extends Controller
 	}
 
     /**
-     * 按账本统计@todo 未完成
+     * 按账本统计
      * @param Request $request
      * @return array
      */
     public function getBookSummary(Request $request)
     {
-        $top = $request->input("top", 2);
-        return $this->reportRep->getYearSummary($this->userId, $top);
+        $top = $request->input("top", 10);
+        return $this->reportRep->getBookSummary($this->userId, $top);
+    }
+
+    /**
+     * 某账本下所有想象账目
+     * @param $book_id
+     * @return mixed
+     */
+    public function getBookDetail($book_id)
+    {
+        return $this->reportRep->getBookDetail($book_id);
     }
 }

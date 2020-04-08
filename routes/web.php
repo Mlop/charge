@@ -66,17 +66,20 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         //个人报表 开始 ------------------------------------
         $router->get('/report', 'ReportController@index');
         //按月概要
-        $router->get('/summary', 'ReportController@getSummaryList');
+        $router->get('/report/summary', 'ReportController@getSummaryList');
         //某月详细
-        $router->get('/monthly', 'ReportController@getMonthList');
+        $router->get('/report/monthly', 'ReportController@getMonthList');
         //年度top2账单
-        $router->get('/yearly', 'ReportController@getYearSummary');
+        $router->get('/report/yearly', 'ReportController@getYearSummary');
+        //按账本统计总额
+        $router->get('/report/book', 'ReportController@getBookSummary');
+        $router->get('/report/book/{id}', 'ReportController@getBookDetail');
         //个人报表 结束 ------------------------------------
         //统计 开始 ------------------------------------
         $router->get('/stat', 'StatController@index');
-        $router->get('/stat/filters', 'StatController@filters');
-        $router->get('/stat/list', 'StatController@lists');
-        $router->get('/stat/list/detail', 'StatController@listDetail');
+        $router->get('/stat/filters', 'StatController@filters');//列表筛选条件，年份、账本、用户姓名
+        $router->get('/stat/list', 'StatController@lists');//列表结果
+        $router->get('/stat/list/detail', 'StatController@listDetail');//列表中展开的详情
         //统计 结束 ------------------------------------
     });
     //公共数据

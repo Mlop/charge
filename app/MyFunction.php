@@ -34,4 +34,15 @@ class MyFunction
         }
         return $formatCash;
     }
+
+    /**
+     * 根据日期字符串格式化为日期格式，比如：2020-04-02 11:12:23格式化为：2020-04-02
+     * @param $timeStr 要格式的字符串
+     * @return string 日期字符串
+     */
+    public function getDateStr($timeStr)
+    {
+        $datetime = new \DateTime($timeStr);
+        return $datetime->format('Y-m-d');
+    }
 }

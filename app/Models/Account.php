@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
+    const TYPE_OUTGO = 'outgo';
+    const TYPE_INCOME = 'income';
+    const TYPE_LOAN = 'loan';
     protected $table = 'account';
     protected $fillable = [
         'remark', 'user_id', 'book_id', 'cash', 'category_id', 'record_at', 'type', 'items', 'contact'

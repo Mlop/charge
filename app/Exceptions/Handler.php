@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,9 +51,10 @@ class Handler extends ExceptionHandler
 //           $msg = $this->handleValidationException($exception);
 //           return response(['code' => 1, 'msg' => $msg], 200);
 //		}
-// 		if ($exception instanceof UnauthorizedHttpException) {
+ 		if ($exception instanceof UnauthorizedHttpException) {
 //            return response($exception->getMessage(), 401);
-// 		}
+            return response(['code' => 401, 'msg' => $exception->getMessage()], 200);
+ 		}
 		return response(['code' => 1, 'msg' => $exception->getMessage()], 200);
     }
 }
