@@ -148,7 +148,6 @@ class AccountRepository
     {
         extract($params);
         $builder = Account::join("book as b", "account.book_id", "=", "b.id")
-//            ->join("account_item ai", "account.id", "=", "ai.account_id")
             ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.created_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
         if (isset($year) && $year) {
             $builder = $builder
@@ -164,8 +163,7 @@ class AccountRepository
         $data = $builder->get();
         $result = [];
         foreach ($data as $item) {
-            $items = $this->getItemsDetail(["ai.account_id"=>$item['id']]);
-            $item['items'] = $items;
+            $item['items'] = $this->getItemsDetail(["ai.account_id"=>$item['id']]);
             $result[] = $item;
         }
 
