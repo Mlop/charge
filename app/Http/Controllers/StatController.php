@@ -76,7 +76,7 @@ class StatController extends Controller
     public function lists(Request $request)
     {
         $params = $request->all();
-        $summary = $this->accountRep->statByContact($params);
+        $summary = $this->accountRep->statByContact($params, $this->userId);
         return $summary;
     }
 

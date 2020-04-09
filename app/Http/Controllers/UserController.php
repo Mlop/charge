@@ -5,6 +5,7 @@
  */
 namespace App\Http\Controllers;
 
+use App\Facades\MyFun;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
@@ -75,7 +76,10 @@ class UserController extends Controller
 			}
         }
 		$user = Auth::user();
+        $user->login_at = MyFun::now();
+        $user->save();
 		$user->token = $token;
+
         return $user;
     }
 
@@ -99,11 +103,11 @@ class UserController extends Controller
         $data[$key] = $account;
         $messages = [
             'account.required'=>'请输入账号',
-            'account.unique'=>'账号已存在',
+            'account.unique'=>'账号已存在，换个手机或邮箱再试试吧',
             'account.max'=>'账号最长11位',
             'account.email'=>'账号格式不正确',
             'password.required'=>'请输入密码',
-			'name.unique'=>'账号已存在',
+			'name.unique'=>'账号已存在，换个名称再试试吧',
         ];
         $validator = Validator::make($data, $rules, $messages);
         if ($validator->fails()) {
@@ -123,6 +127,8 @@ class UserController extends Controller
             return ['code' => 404, 'msg' => 'user_not_found'];
         }
 		$user = Auth::user();
+        $user->login_at = MyFun::now();
+        $user->save();
 		$user->token = $token;
         return $user;
     }
