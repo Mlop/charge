@@ -77,7 +77,7 @@ class BookRepository
      */
     public function getFilterYears($user_id)
     {
-        $years = Account::select(DB::Raw("DATE_FORMAT(created_at,'%Y') as create_year"))
+        $years = Account::select(DB::Raw("DATE_FORMAT(record_at,'%Y') as create_year"))
             ->where("user_id", $user_id)
             ->groupBy("create_year")
             ->get();

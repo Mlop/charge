@@ -62,11 +62,16 @@ class AccountRepository
 
     public function updateItem($cond, $values)
     {
-        $item = AccountItem::where($cond);
-        if (!$item) {
+        $item = $this->getItemBuilder($cond);
+        if (!$item->exists()) {
             return false;
         }
         return $item->update($values);
+    }
+
+    public function getItemBuilder($cond)
+    {
+        return AccountItem::where($cond);
     }
 
     /**
@@ -81,9 +86,9 @@ class AccountRepository
         }
         $query = Account::select("contact",DB::Raw("count(1) as totalTimes"), DB::Raw("sum(cash) as cash"))
             ->groupBy("contact");
-        //创建年限搜索
+        //记账年限搜索
         if (isset($params['year']) && $params['year']) {
-            $query = $query->whereRaw("DATE_FORMAT(account.created_at, '%Y')=".$params['year']);
+            $query = $query->whereRaw("DATE_FORMAT(account.record_at, '%Y')=".$params['year']);
         }
         //联系人过滤
         if (isset($params['contact']) && $params['contact']) {
@@ -148,10 +153,10 @@ class AccountRepository
     {
         extract($params);
         $builder = Account::join("book as b", "account.book_id", "=", "b.id")
-            ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.created_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
+            ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.record_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
         if (isset($year) && $year) {
             $builder = $builder
-                ->whereRaw("DATE_FORMAT(account.created_at,'%Y')=".$params['year']);
+                ->whereRaw("DATE_FORMAT(account.record_at,'%Y')=".$params['year']);
         }
         if (isset($book) && $book) {
             $builder = $builder

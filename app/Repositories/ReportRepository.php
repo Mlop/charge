@@ -94,6 +94,7 @@ class ReportRepository
 		$result = DB::select($sql);
 		foreach ($result as &$row) {
 		    $row->cash = MyFun::formatCash($row->cash);
+		    $row->items = json_decode($row->items);
         }
         return $result;
     }
@@ -150,14 +151,19 @@ class ReportRepository
     /**
      * 某账本所有账目
      * @param $book_id
+     * @param $page
+     * @param $pageSize
      * @return mixed
      */
-    public function getBookDetail($book_id)
+    public function getBookDetail($book_id, $page, $pageSize)
     {
-        $result = Account::where("book_id", $book_id)->select("account.*",DB::Raw("(select cat.title from category as cat where cat.id=account.category_id) as cattitle"))->orderBy("created_at", "desc")->get();
+        $result = Account::where("book_id", $book_id)
+            ->select("account.*",DB::Raw("(select cat.title from category as cat where cat.id=account.category_id) as cattitle"))
+            ->orderBy("record_at", "desc")
+            ->paginate($pageSize);
         foreach ($result as &$item) {
             $item['items'] = json_decode($item['items']);
-            $item['created_date'] = MyFun::getDateStr($item['created_at']);
+            $item['created_date'] = MyFun::getDateStr($item['record_at']);
         }
         return $result;
     }

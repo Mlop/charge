@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\AccountRepository;
 use App\Repositories\BookItemRepository;
 use Illuminate\Http\Request;
 use App\Repositories\BookRepository;
@@ -18,13 +19,15 @@ class BookController extends Controller
     protected $bookRep;
     protected $userId;
     protected $bookItemRep;
+    protected $accountRep;
 
-    public function __construct(BookRepository $bookRep, BookItemRepository $bookItemRep)
+    public function __construct(BookRepository $bookRep, BookItemRepository $bookItemRep, AccountRepository $accountRep)
     {
         $this->bookRep = $bookRep;
         $this->bookItemRep = $bookItemRep;
-        $user = Auth::user();
+        $user = $this->getUser();
         $this->userId = $user ? $user->id : 0;
+        $this->accountRep = $accountRep;
     }
 	/**
 	添加或编辑
@@ -113,6 +116,12 @@ class BookController extends Controller
             }
             return $this->bookItemRep->add($params);
         } else {
+            //如果已被使用，不能删除
+            $isExists = $this->accountRep->getItemBuilder(["item_id"=>$itemId])->join("account", "account_id", "=", "account.id")
+                ->where("book_id", $book_id)->exists();
+            if ($isExists) {
+                return ['code'=>1, 'msg'=>'取消失败,该列项正在使用中'];
+            }
             $params = [
                 "item_id" => $itemId,
                 "user_id" => $this->userId,

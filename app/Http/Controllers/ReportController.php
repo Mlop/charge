@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Repositories\ReportRepository;
 use App\Repositories\AccountRepository;
 use Auth;
+use App\Facades\MyFun;
 
 class ReportController extends Controller
 {
@@ -53,6 +54,7 @@ class ReportController extends Controller
                 $remark = $item->contact ? : Account::$typeConfig[$item->type];
             }
             $item->remark = $remark;
+            $item->cash = MyFun::formatCash($item->cash);
         }
         return $items;
     }
@@ -96,8 +98,10 @@ class ReportController extends Controller
      * @param $book_id
      * @return mixed
      */
-    public function getBookDetail($book_id)
+    public function getBookDetail(Request $request, $book_id)
     {
-        return $this->reportRep->getBookDetail($book_id);
+        $page = $request->get('page', 1);
+        $pageSize = $request->get('page_size', 1);
+        return $this->reportRep->getBookDetail($book_id, $page, $pageSize);
     }
 }
