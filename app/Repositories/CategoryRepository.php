@@ -56,9 +56,9 @@ class CategoryRepository
      * @param string $type
      * @param int $parent_id
      */
-    public function getList($type = self::TYPE_IN, $parent_id = 0)
+    public function getList($type = self::TYPE_IN, $parent_id = 0, $userId = 0)
     {
-        $sql = "SELECT *,(SELECT cf.id FROM category_favorite cf WHERE cf.category_id=c.id) AS fav_id 
+        $sql = "SELECT *,(SELECT cf.id FROM category_favorite cf WHERE cf.category_id=c.id and cf.user_id={$userId}) AS fav_id 
                       FROM category c 
                       WHERE type = '{$type}'
                       AND parent_category_id = {$parent_id}";
@@ -73,12 +73,12 @@ class CategoryRepository
             ->where("parent_category_id", $parent_id)
             ->count();
     }
-	
+
 	public function edit($id, $params)
 	{
 		return $this->get($id)->setRawAttributes($params)->save();
 	}
-	
+
 	public function add($params)
 	{
 		return Category::create($params);
@@ -86,7 +86,7 @@ class CategoryRepository
 	public function del($id)
 	{
 		DB::beginTransaction();
-		
+
 		try {
 			//删除所有子类别
 			Category::where("parent_category_id", $id)->delete();

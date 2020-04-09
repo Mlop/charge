@@ -45,4 +45,13 @@ class MyFunction
         $datetime = new \DateTime($timeStr);
         return $datetime->format('Y-m-d');
     }
+
+    /**
+     * 当前时间字符串
+     * @return false|string
+     */
+    public function now()
+    {
+        return date('Y-m-d H:i:s');
+    }
 }

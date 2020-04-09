@@ -21,7 +21,7 @@ class CategoryController extends Controller
     public function __construct(CategoryRepository $catRep)
     {
         $this->catRep = $catRep;
-        $this->user = Auth::user();
+        $this->user = $this->getUser();
         $this->userId = $this->user->id;
     }
 
@@ -30,7 +30,7 @@ class CategoryController extends Controller
         $type = $request->input('type', CategoryRepository::TYPE_IN);
         $parent_id = $request->input('parent_id', 0);
 		$include_sub = $request->input('include_sub', false);
-        $list = $this->catRep->getList($type, $parent_id);
+        $list = $this->catRep->getList($type, $parent_id, $this->userId);
 
         //孙类别数量
 		$allSubTotal = 0;
@@ -39,7 +39,7 @@ class CategoryController extends Controller
             $cat->total = $subTotal;
 			$allSubTotal += $subTotal;
 			if ($include_sub) {
-                $cat->sub = $this->catRep->getList($type, $cat->id);
+                $cat->sub = $this->catRep->getList($type, $cat->id, $this->userId);
 			}
         }
         $cats = $list->toArray();
@@ -68,21 +68,21 @@ class CategoryController extends Controller
 		$title = $request->input("title");
 		$parent_id = $request->input("parent_id");
 		$type = $request->input("type");
-		
+
 		//创建
 		if ($id == 0) {
 			$params = [
 				"title" => $title,
 				"parent_category_id" => $parent_id,
 				"type" => $type,
-//                "user_id" => , @todo
+                "user_id" => $this->userId,// @todo
 			];
 			return $this->catRep->add($params);
 		} else {//编辑
 			$params = [
 				"title" => $title,
 			];
-			
+
 			$isOk = $this->catRep->edit($id, $params);
 			return $isOk ? ['code'=>0, 'msg'=>'修改成功'] : ['code'=>1, 'msg'=>'修改失败'];
 		}

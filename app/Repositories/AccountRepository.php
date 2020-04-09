@@ -77,7 +77,7 @@ class AccountRepository
     /**
      * 根据姓名统计数量
      */
-    public function statByContact($params)
+    public function statByContact($params, $user_id)
     {
         $cond = [];
         //账本搜索
@@ -85,6 +85,8 @@ class AccountRepository
             $cond['book_id'] = $params['book'];
         }
         $query = Account::select("contact",DB::Raw("count(1) as totalTimes"), DB::Raw("sum(cash) as cash"))
+            ->join("book", "book.id", "=", "account.book_id")
+            ->where("book.user_id", $user_id)
             ->groupBy("contact");
         //记账年限搜索
         if (isset($params['year']) && $params['year']) {
