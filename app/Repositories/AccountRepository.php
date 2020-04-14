@@ -9,6 +9,7 @@ namespace App\Repositories;
 
 use App\Models\Account;
 use App\Models\AccountItem;
+use App\Models\Image;
 use App\Models\Item;
 use Carbon\Carbon;
 use DB;
@@ -72,6 +73,22 @@ class AccountRepository
     public function getItemBuilder($cond)
     {
         return AccountItem::where($cond);
+    }
+
+    public function getImageBuilder($cond, $type = Image::TYPE_ACCOUNT)
+    {
+        if ($type) {
+            $cond['type'] = $type;
+        }
+        return Image::where($cond);
+    }
+
+    public function createImages($data, $type = Image::TYPE_ACCOUNT)
+    {
+        if ($type) {
+            $data['type'] = $type;
+        }
+        return Image::create($data);
     }
 
     /**
