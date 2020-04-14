@@ -37,7 +37,6 @@ class AccountController extends Controller
         $data = $request->all();
         $data['user_id'] = $this->userId;
         $data['cash'] = $data['cash'] ? $data['cash'] : 0;
-
         DB::beginTransaction();
         try {
             if (isset($data['contact']) && $data['contact']) {
@@ -48,13 +47,27 @@ class AccountController extends Controller
             $data['items'] = json_encode($items);
             //保存account
             $account = $this->rep->create($data);
+            //包含图片
+            if ($data['images']) {
+                $images = $data['images'];
+                $imageBuilder = $this->rep->getImageBuilder(['rel_id'=>$account->id]);
+                $sourcePath = $imageBuilder->pluck("path")->toArray();
+                if (array_diff($images, $sourcePath)) {//有修改，删除已有，添加新图片
+                    $imageBuilder->delete();
+                    foreach ($images as $path) {
+                        $this->rep->createImages([
+                            'rel_id'=>$account->id,
+                            'path' => $path,
+                        ]);
+                    }
+                }
+            }
             //保存items
             foreach ($items as &$item) {
                 //现金
                 if ($item['value_type'] == Item::VALUE_TYPE_DECIMAL) {
                     $item['formValue'] = $item['formValue'] ? $item['formValue'] : 0;
                     $item['formValue'] = number_format($item['formValue'], 2, '.', '');
-
                 }
                 $this->rep->createItems([
                     'item_id' => $item['value'],
