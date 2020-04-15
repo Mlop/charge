@@ -141,6 +141,7 @@ class AccountController extends Controller
 		}
 		$data->category_title = $this->catRep->getField($data->category_id);
 		$data->items = json_decode($data->items, true);
+		$data->images = $this->rep->getImageBuilder(['rel_id'=>$id])->pluck("path")->toArray();
 		return $data;
 	}
 }
