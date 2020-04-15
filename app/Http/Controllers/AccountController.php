@@ -26,7 +26,7 @@ class AccountController extends Controller
     public function __construct(AccountRepository $rep, CategoryRepository $catRep, ContactRepository $contactRep)
     {
         $this->rep = $rep;
-        $user = Auth::user();
+        $user = $this->getUser();
         $this->userId = $user->id;
 		$this->catRep = $catRep;
         $this->contactRep = $contactRep;
@@ -67,6 +67,7 @@ class AccountController extends Controller
                 //现金
                 if ($item['value_type'] == Item::VALUE_TYPE_DECIMAL) {
                     $item['formValue'] = $item['formValue'] ? $item['formValue'] : 0;
+                    //格式化价格金额显示
                     $item['formValue'] = number_format($item['formValue'], 2, '.', '');
                 }
                 $this->rep->createItems([
@@ -75,7 +76,6 @@ class AccountController extends Controller
                     'item_value' => $item['formValue'],
                 ]);
             }
-            //@todo 格式化金额显示
             $this->rep->edit($account->id, ['items'=>json_encode($items)]);
             DB::commit();
             return $account;
@@ -83,7 +83,6 @@ class AccountController extends Controller
             DB::rollback();
             return ['code'=>1, 'msg'=>'save db exception.'.$ex->getMessage()];
         }
-
     }
 
     public function delete($id)
@@ -125,6 +124,21 @@ class AccountController extends Controller
             //保存account
             $params['items'] = json_encode($items);
             $isOk = $this->rep->edit($id, $params);
+            //包含图片
+            if ($params['images']) {
+                $images = $params['images'];
+                $imageBuilder = $this->rep->getImageBuilder(['rel_id'=>$id]);
+                $sourcePath = $imageBuilder->pluck("path")->toArray();
+                if (array_diff($images, $sourcePath)) {//有修改，删除已有，添加新图片
+                    $imageBuilder->delete();
+                    foreach ($images as $path) {
+                        $this->rep->createImages([
+                            'rel_id'=>$id,
+                            'path' => $path,
+                        ]);
+                    }
+                }
+            }
             DB::commit();
             return $isOk ? ['code' => 0] : ['code' => 1, 'msg' => '该支出项不存在'];
         } catch (\Exception $ex) {

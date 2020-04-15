@@ -21,64 +21,34 @@ class CommonController extends Controller
         return $this->contactRep->builder([])->pluck("name");
     }
 
-    private function cors()
-    {
-        $request_method = $_SERVER['REQUEST_METHOD'];
-        $origin = "*";
-        if ($request_method === 'OPTIONS') {
-
-            header('Access-Control-Allow-Origin:'.$origin);
-            header('Access-Control-Allow-Credentials:true');
-            header('Access-Control-Allow-Methods:GET, POST, OPTIONS');
-
-            header('Access-Control-Max-Age:1728000');
-            header('Content-Type:text/plain charset=UTF-8');
-            header('Content-Length: 0',true);
-
-            header('status: 204');
-            header('HTTP/1.0 204 No Content');
-
-        }
-
-        if ($request_method === 'POST') {
-
-            header('Access-Control-Allow-Origin:'.$origin);
-            header('Access-Control-Allow-Credentials:true');
-            header('Access-Control-Allow-Methods:GET, POST, OPTIONS');
-
-        }
-
-        if ($request_method === 'GET') {
-
-            header('Access-Control-Allow-Origin:'.$origin);
-            header('Access-Control-Allow-Credentials:true');
-            header('Access-Control-Allow-Methods:GET, POST, OPTIONS');
-
-        }
-    }
-
     /**
-     * 上传文件到public目录
+     * 上传文件到public/upload目录
      */
     public function uploadFile(Request $request)
     {
-        $this->cors();
-        $savePath = base_path()."/public/upload";
+        $saveDir = "/upload";
+        $relativeDir = "/public{$saveDir}";
+        $savePath = base_path().$relativeDir;
         if (!file_exists($savePath)) {
             mkdir($savePath);
-            chmod($savePath, 0777);
+            chmod($savePath, 0666);
         }
         $file=$request->file('file');
-        $res = ['code' => 1, 'data'=>null, 'msg' => 'invalid file'];
         if ($file->isValid()) {
             $dir = $savePath;
-            $filename = date('YmdHis').rand(0, 1000).'.'.$file->guessExtension();
-            $file->move( $dir, $filename);
-
-            $res['code'] = 0;
-            $res['data'] = "http://".$filename;
-            $res['msg'] = 'success';
+            $filename = $file->getBasename()."_".date('Ymd')."_".str_pad(rand(0, 100),3, 0, STR_PAD_LEFT).'.'.$file->guessExtension();
+            $file->move($dir, $filename);
+            return $request->getSchemeAndHttpHost().$saveDir."/".$filename;
         }
-        return $res;
+        return "";
+    }
+
+    /**
+     * 下载Android安装包
+     */
+    public function downloadApk(Request $request)
+    {
+        $version = $request->get("v", "1.0");
+        return $request->getSchemeAndHttpHost()."/public/20200415_{$version}.apk";
     }
 }
