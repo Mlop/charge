@@ -49,6 +49,6 @@ class CommonController extends Controller
     public function downloadApk(Request $request)
     {
         $version = $request->get("v", "1.0");
-        return $request->getSchemeAndHttpHost()."/public/20200415_{$version}.apk";
+        return $request->getSchemeAndHttpHost()."/20200415_{$version}.apk";
     }
 }
