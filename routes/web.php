@@ -86,7 +86,10 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
     $router->get('/contacts', 'CommonController@contactList');
     //上传图片到服务器
     $router->post('/img/upload', 'CommonController@uploadFile');
+    //获取最新版本
+    $router->get('/apk/latest', 'CommonController@getLatestVersion');
     //下载Android安装包
     $router->get('/apk/download', 'CommonController@downloadApk');
+
 });
 
