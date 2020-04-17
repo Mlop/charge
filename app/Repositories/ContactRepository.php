@@ -91,14 +91,19 @@ class ContactRepository
 
     /**
      * 获取从A-Z的索引数据
+     * @param $isSelf int 是否包括未输入姓名的自己
+     * @return array
      */
-    public function getAZIndexList()
+    public function getAZIndexList($isSelf = 1)
     {
         $contacts = $data = [];
         $items = Contact::orderBy("first_letter", "asc")->orderBy("letters", "asc")->get();
         //{"A":["abc","aaa"]}
         foreach ($items as $item) {
             $contacts[$item->first_letter][] = $item->name;
+        }
+        if ($isSelf) {
+            $contacts['Z'][] = "自己";
         }
         //[{"letter":"A","data":["abc","aaa"]}]
         foreach ($contacts as $firstLetter => $names) {

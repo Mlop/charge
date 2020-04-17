@@ -13,6 +13,7 @@ use App\Repositories\BookRepository;
 use App\Repositories\ContactRepository;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StatController extends Controller
 {
@@ -39,6 +40,8 @@ class StatController extends Controller
     public function filters(Request $request)
     {
         $field = $request->get('field', 'all');
+        //是否包括未输入姓名的自己
+        $isSelf = $request->get('is_self', 1);
         switch ($field) {
             case 'years':
                 $data = $this->bookRep->getFilterYears($this->userId);
@@ -47,7 +50,7 @@ class StatController extends Controller
                 $data = $this->bookRep->getFilterList($this->userId);
                 break;
             case 'contacts':
-                $data = $this->contactRep->getAZIndexList();
+                $data = $this->contactRep->getAZIndexList($isSelf);
                 break;
             default:
                 //年份
