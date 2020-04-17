@@ -111,6 +111,9 @@ class AccountRepository
         }
         //联系人过滤
         if (isset($params['contact']) && $params['contact']) {
+            if ($params['contact'] == '自己') {
+                $params['contact'] = "";
+            }
             $query = $query->whereIn('contact', explode(",", $params['contact']));
         }
         //排序
