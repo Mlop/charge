@@ -172,7 +172,8 @@ class AccountRepository
     {
         extract($params);
         $builder = Account::join("book as b", "account.book_id", "=", "b.id")
-            ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.record_at, '%Y-%m-%d') as created_date"), "b.title as bookTitle");
+            ->select("account.id", "account.type", "account.contact", DB::Raw("DATE_FORMAT(account.record_at, '%Y-%m-%d') as record_date"), "b.title as bookTitle")
+            ->orderBy("account.record_at", "desc");
         if (isset($year) && $year) {
             $builder = $builder
                 ->whereRaw("DATE_FORMAT(account.record_at,'%Y')=".$params['year']);
