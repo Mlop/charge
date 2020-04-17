@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\MyFun;
 use App\Models\Item;
 use App\Repositories\AccountRepository;
 use App\Repositories\CategoryRepository;
@@ -150,6 +151,7 @@ class AccountController extends Controller
 	public function get($id)
 	{
 		$data = $this->rep->get($id);
+        $data->record_at_date = MyFun::getDateStr($data->record_at);
 		if (!$data) {
 			return ['code'=>1, 'msg'=>'未找到'];
 		}
