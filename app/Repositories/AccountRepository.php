@@ -101,13 +101,20 @@ class AccountRepository
         if (isset($params['book']) && $params['book']) {
             $cond['book_id'] = $params['book'];
         }
-        $query = Account::select("contact",DB::Raw("count(1) as totalTimes"), DB::Raw("sum(cash) as cash"))
-            ->join("book", "book.id", "=", "account.book_id")
-            ->where("book.user_id", $user_id)
+        $pureCash = "if(acc.type='income', acc.cash, -1*acc.cash) pure_cash";
+
+        $reportRep = new ReportRepository();
+        $reportRep->getDetailAll($user_id, $pureCash);
+        $query = DB::table(DB::Raw("(".$reportRep->getDetailAll($user_id, $pureCash).") as t1"))
+            ->select("contact",DB::Raw("count(1) as totalTimes"), DB::Raw("round(sum(pure_cash), 2) as cash"))
             ->groupBy("contact");
         //记账年限搜索
         if (isset($params['year']) && $params['year']) {
             $query = $query->whereRaw("DATE_FORMAT(account.record_at, '%Y')=".$params['year']);
+        }
+        //类型搜索
+        if (isset($params['type']) && $type = trim($params['type'], ",")) {
+            $query = $query->whereIn('type', explode(",", $params['type']));
         }
         //联系人过滤
         if (isset($params['contact']) && $params['contact']) {
@@ -122,12 +129,13 @@ class AccountRepository
             $query = $query->orderBy($field, $sortBy);
         }
         $data = $query->where($cond)->get();
+        $data = json_decode(json_encode($data), true);
         $result = [];
         foreach ($data as $item) {
-            $item['contact'] = $item['contact'] ? : '';//个人
+            $item['contact'] = $item['contact'] ? : '';//自己
             $item['cash'] = MyFun::formatCash($item['cash']);
             $cond['a.contact'] = $item['contact'];
-            $item['items'] = $this->statItems($cond);
+            $item['items'] = $this->statItems($cond)->toArray();
             $result[] = $item;
         }
         return $result;
@@ -142,7 +150,7 @@ class AccountRepository
     {
         $query = Item::join("account_item as ai", "item.id", "=", "ai.item_id")
             ->join("account as a", "a.id", "=", "ai.account_id")
-            ->select("title",DB::Raw("sum(item_value) as totalValue"),"a.type")
+            ->select("title",DB::Raw("round(sum(item_value), 2) as totalValue"),"a.type")
             ->whereIn("item.value_type", [Item::VALUE_TYPE_INT, Item::VALUE_TYPE_DECIMAL])
             ->groupBy("a.type","item.title");
         if (isset($params['year']) && $params['year']) {
@@ -196,5 +204,26 @@ class AccountRepository
         }
 
         return $result;
+    }
+
+    /**
+     * 筛选条件的类型
+     * 'outgo'=>'支出',
+     * 'income'=>'收入',
+     * 'loan'=>'借贷',
+     */
+    public function getFilterTypes()
+    {
+        $data[] = [
+            "title" => "类型不限",
+            "value" => ""
+        ];
+        foreach (Account::$typeConfig as $value => $title) {
+            $data[] = [
+                "title" => $title,
+                "value" => $value
+            ];
+        }
+        return $data;
     }
 }

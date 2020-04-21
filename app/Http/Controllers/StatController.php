@@ -49,6 +49,9 @@ class StatController extends Controller
             case 'books':
                 $data = $this->bookRep->getFilterList($this->userId);
                 break;
+            case 'types':
+                $data = $this->accountRep->getFilterTypes();
+                break;
             case 'contacts':
                 $data = $this->contactRep->getAZIndexList($isSelf);
                 break;
@@ -57,6 +60,8 @@ class StatController extends Controller
                 $data['years'] = $this->bookRep->getFilterYears($this->userId);
                 //账本
                 $data['books'] = $this->bookRep->getFilterList($this->userId);
+                //类型
+                $data['types'] = $this->accountRep->getFilterTypes();
                 //a-z姓名
 //                $data['contacts'] = $this->contactRep->getAZIndexList();
                 break;
