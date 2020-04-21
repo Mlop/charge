@@ -132,7 +132,7 @@ class AccountRepository
         $data = json_decode(json_encode($data), true);
         $result = [];
         foreach ($data as $item) {
-            $item['contact'] = $item['contact'] ? : '';//自己
+            $item['contact'] = $item['contact'] ? : '自己';//自己
             $item['cash'] = MyFun::formatCash($item['cash']);
             $cond['a.contact'] = $item['contact'];
             $item['items'] = $this->statItems($cond)->toArray();
