@@ -34,12 +34,14 @@ class ReportController extends Controller
     public function index(Request $request)
     {
 		//本月总支出
-        $totalOut =  $this->reportRep->getTotalInMonth($this->userId, 'outgo');
+        $totalOut = $this->reportRep->getTotalInMonth($this->userId, 'outgo');
 		//本月总收入
-        $totalIn =  $this->reportRep->getTotalInMonth($this->userId, 'income');
+        $totalIn = $this->reportRep->getTotalInMonth($this->userId, 'income');
+        //本月借贷
+        $totalLoan = $this->reportRep->getTotalInMonth($this->userId, 'loan');
 		//最近4条收支记录
         $items = $this->formatRecordItem($this->reportRep->lastestRecord($this->userId));
-		return compact('totalOut', 'totalIn', 'items');
+		return compact('totalOut', 'totalIn', 'totalLoan', 'items');
     }
 
     /**
