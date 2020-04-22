@@ -17,6 +17,7 @@ use App\Facades\MyFun;
 
 class AccountRepository
 {
+    const MYSELF_STR = '自己';
     public function exists($data)
     {
         return Account::where($data)->exists();
@@ -118,7 +119,7 @@ class AccountRepository
         }
         //联系人过滤
         if (isset($params['contact']) && $params['contact']) {
-            if ($params['contact'] == '自己') {
+            if ($params['contact'] == self::MYSELF_STR) {
                 $params['contact'] = "";
             }
             $query = $query->whereIn('contact', explode(",", $params['contact']));
@@ -132,9 +133,9 @@ class AccountRepository
         $data = json_decode(json_encode($data), true);
         $result = [];
         foreach ($data as $item) {
-            $item['contact'] = $item['contact'] ? : '自己';//自己
-            $item['cash'] = MyFun::formatCash($item['cash']);
             $cond['a.contact'] = $item['contact'];
+            $item['contact'] = $item['contact'] ? : self::MYSELF_STR;//自己
+            $item['cash'] = MyFun::formatCash($item['cash']);
             $item['items'] = $this->statItems($cond)->toArray();
             $result[] = $item;
         }
@@ -194,6 +195,9 @@ class AccountRepository
                 ->where("account.book_id", $book);
         }
         if (isset($contact) && $contact) {
+            if ($contact == self::MYSELF_STR) {
+                $contact = '';
+            }
             $builder = $builder->where("contact", $contact);
         }
         $data = $builder->get();
