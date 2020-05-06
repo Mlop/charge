@@ -9,6 +9,7 @@ namespace App\Repositories;
 
 use App\Models\Book;
 use App\Models\Account;
+use App\Models\BookItem;
 use Illuminate\Support\Facades\Redis;
 use DB;
 
@@ -68,7 +69,24 @@ class BookRepository
 
 	public function delete($id)
 	{
-		return $this->get($id)->delete();
+        // 开始事务
+        DB::beginTransaction();
+        try {
+            //账目
+            $sql = "DELETE FROM account_item WHERE account_id NOT IN(SELECT id FROM account WHERE book_id={$id})";
+            DB::delete($sql);
+            Account::where(["book_id"=>$id])->delete();
+            //账本条目
+            BookItem::where(["book_id"=>$id])->delete();
+            //主账本
+		    $isOk = $this->get($id)->delete();
+            // 流程操作顺利则commit
+            DB::commit();
+        } catch (\Exception $e) {
+            // 抛出异常则rollBack
+            DB::rollBack();
+        }
+		return true;
 	}
 
     /**
