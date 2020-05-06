@@ -75,11 +75,20 @@ class BookRepository
             //账目
             $sql = "DELETE FROM account_item WHERE account_id NOT IN(SELECT id FROM account WHERE book_id={$id})";
             DB::delete($sql);
-            Account::where(["book_id"=>$id])->delete();
+            $builder = Account::where(["book_id"=>$id]);
+            if ($builder) {
+                $builder->delete();
+            }
             //账本条目
-            BookItem::where(["book_id"=>$id])->delete();
+            $builder = BookItem::where(["book_id"=>$id]);
+            if ($builder) {
+                $builder->delete();
+            }
             //主账本
-		    $isOk = $this->get($id)->delete();
+		    $builder = $this->get($id);
+            if ($builder) {
+                $builder->delete();
+            }
             // 流程操作顺利则commit
             DB::commit();
         } catch (\Exception $e) {

@@ -40,8 +40,14 @@ class AccountRepository
         DB::beginTransaction();
         try {
             //账本条目
-            BookItem::where(["book_id"=>$id])->delete();
-            $this->get($id)->delete();
+            $builder = BookItem::where(["book_id"=>$id]);
+            if ($builder) {
+                $builder->delete();
+            }
+            $builder = $this->get($id);
+            if ($builder) {
+                $builder->delete();
+            }
             // 流程操作顺利则commit
             DB::commit();
         } catch (\Exception $e) {
