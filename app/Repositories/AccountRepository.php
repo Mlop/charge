@@ -9,6 +9,7 @@ namespace App\Repositories;
 
 use App\Models\Account;
 use App\Models\AccountItem;
+use App\Models\BookItem;
 use App\Models\Image;
 use App\Models\Item;
 use Carbon\Carbon;
@@ -35,7 +36,19 @@ class AccountRepository
 
     public function delete($id)
     {
-        return $this->get($id)->delete();
+        // 开始事务
+        DB::beginTransaction();
+        try {
+            //账本条目
+            BookItem::where(["book_id"=>$id])->delete();
+            $this->get($id)->delete();
+            // 流程操作顺利则commit
+            DB::commit();
+        } catch (\Exception $e) {
+            // 抛出异常则rollBack
+            DB::rollBack();
+        }
+        return true;
     }
 
     public function edit($id, $params)
