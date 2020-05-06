@@ -112,7 +112,7 @@ class AccountController extends Controller
                         $this->contactRep->createNotExists(['name' => $params['contact']]);
                     }
                 }
-                $this->rep->updateItem(
+                $isOk = $this->rep->updateItem(
                     [
                         'item_id' => $item['value'],
                         'account_id' => $id,
@@ -121,6 +121,13 @@ class AccountController extends Controller
                         'item_value' => $item['formValue'],
                     ]
                 );
+                if (!$isOk) {
+                    $this->rep->createItems([
+                        'item_id' => $item['value'],
+                        'account_id' => $id,
+                        'item_value' => $item['formValue'],
+                    ]);
+                }
             }
             //保存account
             $params['items'] = json_encode($items);
