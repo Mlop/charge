@@ -35,7 +35,7 @@ class WorkRecordController extends Controller
 //            return ['code'=>1, 'msg'=>'该账本已经存在'];
 //        }
 		//创建
-		if (!$row) {
+		if (!$row->exists()) {
 			$params = [
 				"work_date" => $work_date,
 				"record_info" => json_encode([$record_at]),
@@ -52,7 +52,8 @@ class WorkRecordController extends Controller
             return $isOk ? ['code'=>0, 'msg'=>'添加成功'] : ['code'=>1, 'msg'=>'添加失败'];
 		} else {//编辑
 //            $row = $this->recordRep->get($id);
-            $record_info = json_decode($row['record_info'], true);
+            $row = $row->first();
+            $record_info = json_decode($row->record_info, true);
             array_push($record_info, $record_at);
             $params = [
                 "work_date" => $work_date,
@@ -60,7 +61,7 @@ class WorkRecordController extends Controller
 //                "user_id"=>$this->userId
             ];
 
-			$isOk = $this->recordRep->edit($id, $params);
+			$isOk = $this->recordRep->edit($row->id, $params);
 //            if ($isOk) {
 //                $this->bookRep->clearBooksCache($this->userId);
 //            }
