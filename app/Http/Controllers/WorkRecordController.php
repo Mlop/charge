@@ -31,9 +31,6 @@ class WorkRecordController extends Controller
 		$work_date = $request->input("work_date");
 		$record_at = $request->input("record_at");
         $row = $this->recordRep->find(["work_date" => $work_date,]);
-//        if ($isExists) {
-//            return ['code'=>1, 'msg'=>'该账本已经存在'];
-//        }
 		//创建
 		if (!$row->exists()) {
 			$params = [
@@ -41,41 +38,25 @@ class WorkRecordController extends Controller
 				"record_info" => json_encode([$record_at]),
 				"user_id"=>$this->userId
 			];
-//			$isExists = $this->recordRep->exists($params);
-//			if ($isExists) {
-//			    return ['code'=>1, 'msg'=>'该账本已经存在'];
-//			}
 			$isOk = $this->recordRep->add($params);
-//			if ($isOk) {
-//                $this->bookRep->clearBooksCache($this->userId);
-//            }
-            return $isOk ? ['code'=>0, 'msg'=>'添加成功'] : ['code'=>1, 'msg'=>'添加失败'];
+            return $isOk ? ['code'=>0, 'msg'=>'打卡成功'] : ['code'=>1, 'msg'=>'打卡失败'];
 		} else {//编辑
-//            $row = $this->recordRep->get($id);
             $row = $row->first();
             $record_info = json_decode($row->record_info, true);
             array_push($record_info, $record_at);
             $params = [
                 "work_date" => $work_date,
                 "record_info" => json_encode($record_info),
-//                "user_id"=>$this->userId
             ];
-
 			$isOk = $this->recordRep->edit($row->id, $params);
-//            if ($isOk) {
-//                $this->bookRep->clearBooksCache($this->userId);
-//            }
-			return $isOk ? ['code'=>0, 'msg'=>'修改成功'] : ['code'=>1, 'msg'=>'修改失败'];
+			return $isOk ? ['code'=>0, 'msg'=>'打卡成功'] : ['code'=>1, 'msg'=>'打卡失败'];
 		}
 	}
-//	public function delete($id)
-//	{
-//		$isOk = $this->bookRep->delete($id);
-//		return $isOk ? ['code'=>0, 'msg'=>'删除成功'] : ['code'=>1, 'msg'=>'删除失败'];
-//	}
-	public function getList()
+
+	public function getList(Request $request)
 	{
-        return $this->recordRep->getList($this->userId);
+        $month = $request->input("month");
+        return $this->recordRep->getList($this->userId, $month);
 	}
     /**
      * 复选框列表数据

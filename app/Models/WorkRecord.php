@@ -8,6 +8,6 @@ class WorkRecord extends Model
 {
     protected $table = 'work_record';
     protected $fillable = [
-        'work_date', 'record_info',
+        'work_date', 'record_info', 'user_id',
     ];
 }

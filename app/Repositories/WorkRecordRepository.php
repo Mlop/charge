@@ -41,13 +41,16 @@ class WorkRecordRepository
      * @param $user_id
      * @return mixed
      */
-	public function getList($user_id)
+	public function getList($user_id, $month = '')
 	{
-//        $list = json_decode(Redis::get("books_".$user_id));
-//        if (!$list) {
-            $list = WorkRecord::where("user_id", $user_id)->get();
-//            Redis::setex("books_".$user_id, 7200, $list);
-//        }
+	    $builder = WorkRecord::select(["id","work_date","record_info"])->where("user_id", $user_id);
+        if ($month) {
+            $builder->where("work_date", "like", "{$month}%");
+        }
+        $list = $builder->get();
+        foreach ($list as &$item) {
+            $item['record_info'] = json_decode($item['record_info'], true);
+        }
         return $list;
 	}
 //    /**
