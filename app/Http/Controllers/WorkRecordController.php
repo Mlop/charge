@@ -26,7 +26,7 @@ class WorkRecordController extends Controller
 	/**
 	添加或编辑
 	*/
-	public function edit(Request $request, $id)
+	public function edit(Request $request)
 	{
 		$work_date = $request->input("work_date");
 		$record_at = $request->input("record_at");
