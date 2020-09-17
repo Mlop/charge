@@ -46,6 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->getMethod() == 'OPTIONS') {
+            return response(['code' => 0, 'msg' => ''], 200);
+        }
 //         return parent::render($request, $exception);
 //		if ($exception instanceof ValidationException) {
 //           $msg = $this->handleValidationException($exception);
