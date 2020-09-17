@@ -81,6 +81,13 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
         $router->get('/stat/list', 'StatController@lists');//列表结果
         $router->get('/stat/list/detail', 'StatController@listDetail');//列表中展开的详情
         //统计 结束 ------------------------------------
+        //打卡记录管理
+        $router->group(['prefix'=>'workrecord'], function ($router) {
+            //某月打卡记录
+            $router->get('/', 'WorkRecordController@getList');
+            //添加/编辑
+            $router->put('/', 'WorkRecordController@edit');
+        });
     });
     //公共数据
     $router->get('/contacts', 'CommonController@contactList');
