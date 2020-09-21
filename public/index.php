@@ -24,8 +24,9 @@ $app = require __DIR__.'/../bootstrap/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: PUT,POST,GET,DELETE,PUT,OPTIONS");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Headers: Authorization,DNT,User-Agent,Keep-Alive,Content-Type,accept,origin,X-Requested-With");
+//本地跨域设置
+//header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Methods: PUT,POST,GET,DELETE,PUT,OPTIONS");
+//header("Access-Control-Allow-Credentials: true");
+//header("Access-Control-Allow-Headers: Authorization,DNT,User-Agent,Keep-Alive,Content-Type,accept,origin,X-Requested-With");
 $app->run();
