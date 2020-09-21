@@ -63,7 +63,8 @@ class Authenticate
                 }
             } catch (\Exception $exception) {
             //catch (TokenBlacklistedException $exception) {
-                return ['code'=>401, 'msg'=>'Unauthorized.'];
+//                return ['code'=>401, 'msg'=>'Unauthorized.'];
+                return ['code'=>401, 'msg'=>$exception->getMessage()];//'Unauthorized.'];
             }
         }
         return $next($request);
