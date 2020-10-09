@@ -11,6 +11,7 @@ use App\Models\Book;
 use App\Models\Account;
 use App\Models\BookItem;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use DB;
 
 class BookRepository
@@ -40,10 +41,12 @@ class BookRepository
      */
 	public function getList($user_id)
 	{
-        $list = json_decode(Redis::get("books_".$user_id));
+//        $list = json_decode(Redis::get("books_".$user_id));
+        $list = json_decode(Cache::get("books_".$user_id));
         if (!$list) {
             $list = Book::where("user_id", $user_id)->get();
-            Redis::setex("books_".$user_id, 7200, $list);
+//            Redis::setex("books_".$user_id, 7200, $list);
+            Cache::put("books_".$user_id, $list, 7200);
         }
         return $list;
 	}
