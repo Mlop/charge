@@ -30,7 +30,7 @@ class WorkRecordController extends Controller
 	{
 		$work_date = $request->input("work_date");
 		$record_at = $request->input("record_at");
-        $row = $this->recordRep->find(["work_date" => $work_date,]);
+        $row = $this->recordRep->find(["work_date" => $work_date, "user_id"=>$this->userId]);
 		//创建
 		if (!$row->exists()) {
 			$params = [
