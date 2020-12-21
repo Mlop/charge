@@ -85,6 +85,8 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
+        //由于被人恶意注册，取消注册功能
+        return ['code'=>1, 'msg'=>'注册失败'];
         $data = $request->all();
         extract($data);
         //验证
