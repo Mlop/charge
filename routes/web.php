@@ -88,6 +88,17 @@ $router->group(['middleware' => ['json_formatter']], function ($router) {
             //添加/编辑
             $router->put('/', 'WorkRecordController@edit');
         });
+        //工具函数，如：任务管理
+        $router->group(['prefix'=>'tool'], function ($router){
+            $router->group(['prefix'=>'todo'], function ($router){
+                //任务列表
+                $router->get('/', 'ToolController@getTodoList');
+                //添加编辑任务
+                $router->put('/{id}', 'ToolController@editTodo');
+                //删除
+                $router->delete('/{id}', 'ToolController@deleteTodo');
+            });
+        });
     });
     //公共数据
     $router->get('/contacts', 'CommonController@contactList');

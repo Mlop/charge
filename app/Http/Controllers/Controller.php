@@ -16,4 +16,25 @@ class Controller extends BaseController
         }
         return $user;
     }
+
+    /**
+     * 成功返回
+     * @param array $data
+     * @param string $msg
+     * @return array
+     */
+    public function successResult($data = [], $msg = 'ok')
+    {
+        return ['code'=>0, 'msg'=>$msg, 'data' => $data,];
+    }
+
+    /**
+     * 失败返回
+     * @param string $msg
+     * @return array
+     */
+    public function failResult($msg = 'fail')
+    {
+        return ['code'=>1, 'msg'=>$msg];
+    }
 }
