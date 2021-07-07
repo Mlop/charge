@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -58,6 +59,10 @@ class Handler extends ExceptionHandler
 //            return response($exception->getMessage(), 401);
             return response(['code' => 401, 'msg' => $exception->getMessage()], 200);
  		}
+ 		//数据库连接失败
+        if ($exception instanceof QueryException) {
+            return response(['code' => 405, 'msg' => "DB connect exception"], 200);
+        }
 		return response(['code' => 1, 'msg' => $exception->getMessage()], 200);
     }
 }
